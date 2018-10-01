@@ -1,6 +1,10 @@
 import React from 'react';
-import { Platform, StatusBar, StyleSheet, View, Button } from 'react-native';
+import { Platform, StatusBar, StyleSheet, View, Text, Button } from 'react-native';
+import { AppLoading, Asset, Font, Icon } from 'expo';
+import AppNavigator from './navigation/AppNavigator';
+import Menu from './components/menu'
 import ProgressBar from './components/ProgressBar.js';
+
 export default class App extends React.Component {
     constructor() {
         super();
@@ -14,6 +18,7 @@ export default class App extends React.Component {
 
     render() {
         return (
+          <Menu />
             <View style={styles.container}>
                 <ProgressBar
                     max={this.state.max_val}
