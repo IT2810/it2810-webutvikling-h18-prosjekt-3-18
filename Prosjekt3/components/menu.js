@@ -6,21 +6,11 @@ class Menu extends Component {
     constructor(props) {
         super(props);
         this.onPress = this.onPress.bind(this);
+        this.guid = this.guid.bind(this);
+        this.deleteItem = this.deleteItem.bind(this);
         this.state = {
-            newMenuName: 'hawdawhee',
+            newMenuName: 'Homework',
             menuItems: [
-                { name: 'Devin' },
-                { name: 'Jackson' },
-                { name: 'James' },
-                { name: 'Joel' },
-                { name: 'John' },
-                { name: 'Jillian' },
-                { name: 'Jimmy' },
-                { name: 'Julie' },
-                { name: 'dude' },
-                { name: 'dude2' },
-                { name: 'dude3' },
-                { name: 'dude4' },
             ]
         }
     }
@@ -29,11 +19,12 @@ class Menu extends Component {
         return (
             <View style={styles.container}>
                 <FlatList
+                    extraData={this.state}
                     style={styles.list}
                     data={this.state.menuItems}
                     renderItem={({ item }) =>
-                        <Item key={item.name}>
-                            <Text style={styles.item}>{item.name}</Text>
+                        <Item key={item.key} id={item.key} onDelete={this.deleteItem}>
+                            <Text style={styles.item}>{item.title}</Text>
                         </Item>}
                 />
                 <View style={{ flex: 1 }}>
@@ -49,9 +40,29 @@ class Menu extends Component {
         );
     }
     onPress() {
-        let menuName = this.state.newMenuName.toString();
-        let menu = [{ name: menuName }];
+        let titleName = this.state.newMenuName.toString();
+        let id = this.guid();
+        let menu = [{ title: titleName, key: id }];
         this.setState({ menuItems: this.state.menuItems.concat(menu) });
+    }
+
+    deleteItem = e => {
+        for (let i = 0; i < this.state.menuItems.length; i++) {
+            let item = this.state.menuItems[i];
+            if (item.key === e) {
+                this.state.menuItems.splice(this.state.menuItems.indexOf(item), 1);
+            }
+        }
+        this.setState({ menuItems: this.state.menuItems })
+    }
+
+    guid() {
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+                .toString(16)
+                .substring(1);
+        }
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
     }
 
 }
