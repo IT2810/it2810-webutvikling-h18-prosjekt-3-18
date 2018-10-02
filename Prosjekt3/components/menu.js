@@ -1,30 +1,40 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, FlatList, Button, TextInput } from 'react-native';
 import Item from './Item'
+import ProgressBar from "./ProgressBar";
+import ItemTodo from "./ItemTodo";
 
 class Menu extends Component {
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
         this.onPress = this.onPress.bind(this);
         this.guid = this.guid.bind(this);
         this.deleteItem = this.deleteItem.bind(this);
         this.state = {
             newMenuName: 'Homework',
             menuItems: [
-            ]
-        }
+            ],
+            current_val: 2,
+            max_val: 15
+        };
+        this._increment_current = this._increment_current.bind(this);
     }
 
     render() {
         return (
             <View style={styles.container}>
+                <ProgressBar
+                    max={this.state.max_val}
+                    current ={this.state.current_val}
+                    height={10}
+                    width={25}/>
                 <FlatList
                     extraData={this.state}
                     style={styles.list}
                     data={this.state.menuItems}
                     renderItem={({ item }) =>
                         <Item key={item.key} id={item.key} onDelete={this.deleteItem}>
-                            <Text style={styles.item}>{item.title}</Text>
+                            <ItemTodo name={item.title}/>
                         </Item>}
                 />
                 <View style={{ flex: 1 }}>
@@ -54,7 +64,7 @@ class Menu extends Component {
             }
         }
         this.setState({ menuItems: this.state.menuItems })
-    }
+    };
 
     guid() {
         function s4() {
@@ -63,6 +73,19 @@ class Menu extends Component {
                 .substring(1);
         }
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+    }
+
+    /**
+     * Used for incrementing the value in the progress bar.
+     * If several bars are to be used, an id has to be used
+     * as a parameter.
+     * @private
+     */
+    _increment_current() {
+        let prev_s = this.state;
+        this.setState({
+            current_val: prev_s.current_val + 1,
+        })
     }
 
 }
@@ -86,6 +109,6 @@ const styles = StyleSheet.create({
         height: 10,
         flex: 13
     }
-})
+});
 
 export default Menu;
