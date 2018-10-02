@@ -4,20 +4,35 @@ import { View, Text, Button } from 'react-native';
 class Item extends Component {
     constructor(props) {
         super(props);
-        this.onPress = this.onPress.bind(this);
+        this.onPressDelete = this.onPressDelete.bind(this);
+        this.onPressOpen = this.onPressOpen.bind(this);
+        this.code = this.code.bind(this);
     }
 
     render() {
         return (
             <View style={{ borderTopWidth: 1, flexDirection: 'row' }}>
-                <Text> Menu: </Text>
                 {this.props.children}
-                <Button onPress={this.onPress} title="Delete"></Button>
+                {this.code()}
+                <Button onPress={this.onPressDelete} title="Delete"></Button>
             </View>
         );
     }
-    onPress() {
+    code() {
+        if (this.props.menu === true) {
+            return (
+                <View>
+                    <Button onPress={this.onPressOpen} title="Open"></Button>
+                </View>
+            )
+        }
+    }
+
+    onPressDelete() {
         this.props.onDelete(this.props.id);
+    }
+    onPressOpen() {
+        this.props.onOpen(this.props.id);
     }
 }
 

@@ -1,7 +1,5 @@
 import React from 'react';
 import { Platform, StatusBar, StyleSheet, View, Text, Button } from 'react-native';
-import { AppLoading, Asset, Font, Icon } from 'expo';
-import AppNavigator from './navigation/AppNavigator';
 import Menu from './components/menu'
 import ProgressBar from './components/ProgressBar.js';
 
@@ -9,7 +7,7 @@ export default class App extends React.Component {
     constructor() {
         super();
         this.state = {
-            current_val: 2,
+            current_val: 13,
             max_val: 15
         };
 
@@ -18,13 +16,15 @@ export default class App extends React.Component {
 
     render() {
         return (
-          <Menu />
-            <View style={styles.container}>
-                <ProgressBar
-                    max={this.state.max_val}
-                    current ={this.state.current_val}
-                    height={10}
-                    width={25}/>
+            <View style={{ flex: 5 }}>
+                <Menu style={{ flex: 7 }} />
+                <View style={styles.container}>
+                    <ProgressBar
+                        max={this.state.max_val}
+                        current={this.state.current_val}
+                        height={10}
+                        width={200} />
+                </View>
             </View>
         );
     }
@@ -45,7 +45,7 @@ export default class App extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 0.4,
         justifyContent: 'center',
         alignItems: 'center',
     }
