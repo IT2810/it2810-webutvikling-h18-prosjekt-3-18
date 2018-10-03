@@ -2,6 +2,7 @@ import React from 'react';
 import { Platform, StatusBar, StyleSheet, View, Text, Button } from 'react-native';
 import Menu from './components/menu'
 import ProgressBar from './components/ProgressBar.js';
+import {StepCounterComponent} from "./components/StepCounterComponent";
 
 export default class App extends React.Component {
     constructor() {
@@ -17,13 +18,8 @@ export default class App extends React.Component {
     render() {
         return (
             <View style={{ flex: 5 }}>
-                <Menu style={{ flex: 7 }} />
                 <View style={styles.container}>
-                    <ProgressBar
-                        max={this.state.max_val}
-                        current={this.state.current_val}
-                        height={10}
-                        width={200} />
+                        <StepCounterComponent/>
                 </View>
             </View>
         );
@@ -50,3 +46,5 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     }
 });
+
+Expo.registerRootComponent(App);
