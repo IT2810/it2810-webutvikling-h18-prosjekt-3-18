@@ -22,6 +22,7 @@
     "react-test-renderer": "latest"
   },
   "devDependencies": {
+    "jest": "^23.6.0",
     "jest-expo": "30.0.0"
   }
 }
