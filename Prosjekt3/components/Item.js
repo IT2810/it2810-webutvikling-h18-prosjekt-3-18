@@ -4,21 +4,22 @@ import { View, Text, Button } from 'react-native';
 class Item extends Component {
     constructor(props) {
         super(props);
-        this.onPress = this.onPress.bind(this);
+        this.onPressDelete = this.onPressDelete.bind(this);
     }
 
     render() {
         return (
             <View style={{ borderTopWidth: 1, flexDirection: 'row' }}>
-                <Text> Menu: </Text>
                 {this.props.children}
-                <Button onPress={this.onPress} title="Delete"></Button>
+                <Button onPress={this.onPressDelete} title="Delete"/>
             </View>
         );
     }
-    onPress() {
+
+    onPressDelete() {
         this.props.onDelete(this.props.id);
     }
+
 }
 
 export default Item;
