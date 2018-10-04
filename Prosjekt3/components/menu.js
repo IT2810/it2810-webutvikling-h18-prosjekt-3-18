@@ -48,7 +48,7 @@ class Menu extends Component {
                     extraData={this.state}
                     style={styles.list}
                     data={this.state.currentViewItems}
-                    renderItem={ ({ item }) =>
+                    renderItem={({ item }) =>
                         <Item
                             key={item.key}
                             id={item.key}
@@ -66,6 +66,7 @@ class Menu extends Component {
                                 <Task
                                     name={item.title}
                                     id={item.key}
+                                    checked={item.checked}
                                     handleCheckbox={this.handleCheckTask}
                                 />}
                         </Item>
@@ -119,8 +120,8 @@ class Menu extends Component {
             for (let i = 0; i < this.state.menuItems.length; i++) {
                 let item = this.state.menuItems[i];
                 if (item.key === e) {
-                    deleteListCurrent.splice(item, 1);
-                    deleteListMenu.splice(item, 1);
+                    deleteListCurrent.splice(this.state.menuItems.indexOf(item), 1);
+                    deleteListMenu.splice(this.state.menuItems.indexOf(item), 1);
                 }
             }
             this.setState({ currentViewItems: deleteListCurrent }, function () {
@@ -132,8 +133,8 @@ class Menu extends Component {
         for (let i = 0; i < this.state.tasks.length; i++) {
             let item = this.state.tasks[i];
             if (item.key === e) {
-                deleteListCurrent.splice(item, 1);
-                deleteListTasks.splice(item, 1);
+                deleteListCurrent.splice(this.state.tasks.indexOf(item), 1);
+                deleteListTasks.splice(this.state.tasks.indexOf(item), 1);
             }
         }
         this.setState({ currentViewItems: deleteListCurrent }, function () {
@@ -185,24 +186,16 @@ class Menu extends Component {
         }]
      */
 
-    handleCheckTask(task, checked) {
-        let tasks = this.state.tasks;
-        for (let i = 0; i < tasks.length; i++) {
-            let prevItem = this.state.tasks[i];
-            console.log(this.state.currentViewItems, "view items");
-            if (prevItem.key === task.props.id) {
-                prevItem.checked = checked;
-                tasks[i] = prevItem;
-                console.log(tasks[i]);
-
-                this.setState({
-                    tasks: tasks,
-                    currentViewItems: this.state.currentViewItems.concat(prevItem)
-
-                });
-
+    handleCheckTask(taskID) {
+        for (let i in this.state.tasks) {
+            if (this.state.tasks[i].key === taskID) {
+                this.state.tasks[i].checked = !this.state.tasks[i].checked;
+                break;
             }
         }
+        this.setState({ tasks: this.state.tasks }, function () {
+            this.setState({ currentViewItems: this.state.tasks });
+        });
     }
 
 }
