@@ -95,7 +95,7 @@ class Menu extends Component {
                 this.setState({ menuItems: this.state.menuItems.concat(menu) });
             })
         } else {
-            console.log("ehfbsefj");
+            console.log("added task");
             let parent = this.state.currentMenu;
             let task = [{ title: titleName, key: id, menu: false, parentID: parent, checked: false }];
             this.setState({ currentViewItems: this.state.currentViewItems.concat(task) }, function () {
@@ -107,39 +107,25 @@ class Menu extends Component {
     back = e => {
         this.setState({
             currentMenu: null,
-            currentViewItems: null
+            currentViewItems: this.state.menuItems
         });
-
-        this.setState({ currentViewItems: this.state.menuItems });
     };
 
     deleteItem = e => {
-        let deleteListCurrent = this.state.currentViewItems;
-        let deleteListMenu = this.state.menuItems;
         if (this.state.currentMenu === null) {
-            for (let i = 0; i < this.state.menuItems.length; i++) {
-                let item = this.state.menuItems[i];
-                if (item.key === e) {
-                    deleteListCurrent.splice(this.state.menuItems.indexOf(item), 1);
-                    deleteListMenu.splice(this.state.menuItems.indexOf(item), 1);
-                }
-            }
-            this.setState({ currentViewItems: deleteListCurrent }, function () {
-                this.setState({ menuItems: deleteListMenu });
+            var removeIndex = this.state.menuItems.map(function (item) { return item.key; }).indexOf(e);
+            this.setState({
+                menuItems: this.state.menuItems.splice(removeIndex, 1)
             });
+            this.back();
+        } else {
+            var removeIndex = this.state.tasks.map(function (item) { return item.key; }).indexOf(e);
+            this.setState({
+                tasks: this.state.tasks.splice(removeIndex, 1),
+                currentViewItems: tasks
+            });
+
         }
-        deleteListCurrent = this.state.currentViewItems;
-        let deleteListTasks = this.state.tasks;
-        for (let i = 0; i < this.state.tasks.length; i++) {
-            let item = this.state.tasks[i];
-            if (item.key === e) {
-                deleteListCurrent.splice(this.state.tasks.indexOf(item), 1);
-                deleteListTasks.splice(this.state.tasks.indexOf(item), 1);
-            }
-        }
-        this.setState({ currentViewItems: deleteListCurrent }, function () {
-            this.setState({ tasks: deleteListTasks });
-        });
     };
 
     openMenu = e => {
@@ -193,8 +179,8 @@ class Menu extends Component {
                 break;
             }
         }
-        this.setState({ tasks: this.state.tasks }, function () {
-            this.setState({ currentViewItems: this.state.tasks });
+        this.setState({ currentViewItems: this.state.tasks }, function () {
+            this.setState({ tasks: this.state.tasks });
         });
     }
 
