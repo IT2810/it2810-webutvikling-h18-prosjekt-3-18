@@ -187,15 +187,18 @@ class Menu extends Component {
      */
 
     handleCheckTask(taskID) {
-        for (let i in this.state.tasks) {
-            if (this.state.tasks[i].key === taskID) {
-                this.state.tasks[i].checked = !this.state.tasks[i].checked;
+        let newTasks = this.state.tasks;
+        for (let i in newTasks) {
+            if (newTasks[i].key === taskID) {
+                newTasks[i].checked = !newTasks.tasks[i].checked;
                 break;
             }
         }
-        this.setState({ tasks: this.state.tasks }, function () {
-            this.setState({ currentViewItems: this.state.tasks });
-        });
+        this.setState({
+            tasks: newTasks,
+            currentViewItems: newTasks
+        })
+
     }
 
 }
