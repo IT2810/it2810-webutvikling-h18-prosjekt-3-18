@@ -190,7 +190,7 @@ class Menu extends Component {
         let newTasks = this.state.tasks;
         for (let i in newTasks) {
             if (newTasks[i].key === taskID) {
-                newTasks[i].checked = !newTasks.tasks[i].checked;
+                newTasks[i].checked = !newTasks[i].checked;
                 break;
             }
         }
