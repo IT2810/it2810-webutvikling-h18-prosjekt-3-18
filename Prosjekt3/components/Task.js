@@ -8,9 +8,21 @@ class Task extends Component {
     }
 
 
+    componentDidMount() {
+
+    }
+
     render() {
         return (
             <View>
+                <CheckBox
+                    isChecked={this.props.checked}
+                    onClick={(e) => {
+                        console.log("trykket");
+                        this.props.handleCheckbox(this.props.id)
+                    }
+                    }
+                />
             </View>
         )
     }
