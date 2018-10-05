@@ -14,6 +14,7 @@ class Menu extends Component {
         this.guid = this.guid.bind(this);
         this.deleteItem = this.deleteItem.bind(this);
         this.openMenu = this.openMenu.bind(this);
+        this.updateView = this.updateView.bind(this);
         this.increment_current = this.increment_current.bind(this);
         this.handleCheckTask = this.handleCheckTask.bind(this);
 
@@ -75,7 +76,7 @@ class Menu extends Component {
                 <View style={{ flex: 1 }}>
                     <TextInput
                         style={{ height: 40, borderTopWidth: 2, marginTop: 20, }}
-                        onChangeText={(newMenuName) => this.setState({ newMenuName })}
+                        onChangeText={(newMenuName) => this.thing(newMenuName)}
                         value={this.state.newMenuName}
                     />
                     <Button style={styles.button} onPress={this.onAdd} title="Add">Add</Button>
@@ -85,59 +86,66 @@ class Menu extends Component {
         );
     }
 
+    updateView() {
+        let folderID = this.state.currentMenu;
+        if (folderID === null) {
+            this.setState({ currentViewItems: this.state.menuItems });
+        } else {
+            let newCurrentMenu = this.state.tasks.map(
+                function (item) {
+                    if (folderID === item.parentID) {
+                        return item;
+                    }
+                });
+            this.setState({ currentViewItems: newCurrentMenu });
+        }
+    }
+
     onAdd = e => {
-        // TODO: Fetch from asyncstorage
         let id = this.guid();
         let titleName = this.state.newMenuName;
         if (this.state.currentMenu === null) {
             let menu = [{ title: titleName, key: id, menu: true }];
-            this.setState({ currentViewItems: this.state.currentViewItems.concat(menu) }, function () {
-                this.setState({ menuItems: this.state.menuItems.concat(menu) });
+            this.setState({ menuItems: this.state.menuItems.concat(menu) }, function () {
+                this.updateView();
             })
         } else {
-            console.log("added task");
             let parent = this.state.currentMenu;
             let task = [{ title: titleName, key: id, menu: false, parentID: parent, checked: false }];
-            this.setState({ currentViewItems: this.state.currentViewItems.concat(task) }, function () {
-                this.setState({ tasks: this.state.tasks.concat(task) });
+            this.setState({ tasks: this.state.tasks.concat(task) }, function () {
+                this.updateView();
             });
         }
     };
 
     back = e => {
-        this.setState({
-            currentMenu: null,
-            currentViewItems: this.state.menuItems
+        this.setState({ currentMenu: null }, function () {
+            this.updateView();
         });
     };
 
     deleteItem = e => {
         if (this.state.currentMenu === null) {
-            var removeIndex = this.state.menuItems.map(function (item) { return item.key; }).indexOf(e);
-            this.setState({
-                menuItems: this.state.menuItems.splice(removeIndex, 1)
+            var removeIndex = this.state.menuItems.findIndex(x => x.key == e);
+            let menuList = this.state.menuItems;
+            menuList.splice(removeIndex, 1);
+            this.setState({ menuItems: menuList }, function () {
+                this.updateView();
             });
-            this.back();
         } else {
-            var removeIndex = this.state.tasks.map(function (item) { return item.key; }).indexOf(e);
-            this.setState({
-                tasks: this.state.tasks.splice(removeIndex, 1),
-                currentViewItems: tasks
+            var removeIndex = this.state.tasks.findIndex(x => x.key == e);
+            let taskList = this.state.tasks;
+            taskList.splice(removeIndex, 1);
+            this.setState({ tasks: taskList }, function () {
+                this.updateView();
             });
         }
     };
 
     openMenu = e => {
-        this.state.currentMenu = e;
-        let ny = [];
-        for (let i = 0; i < this.state.tasks.length; i++) {
-            let item = this.state.tasks[i];
-
-            if (item.parentID === e) {
-                ny.push(item);
-            }
-        }
-        this.setState({ currentViewItems: ny });
+        this.setState({ currentMenu: e }, function () {
+            this.updateView();
+        });
     };
 
     guid() {
@@ -172,22 +180,16 @@ class Menu extends Component {
      */
 
     handleCheckTask(taskID) {
-        let newTasks = this.state.tasks;
-        for (let i in newTasks) {
-            if (newTasks[i].key === taskID) {
-                newTasks[i].checked = !newTasks[i].checked;
-                break;
-            }
-        }
-        this.setState({
-            tasks: newTasks,
-            currentViewItems: newTasks
+        var checkedIndex = this.state.tasks.findIndex(x => x.key == taskID);
+        let taskList = this.state.tasks;
+        taskList[checkedIndex].checked = !taskList[checkedIndex].checked;
+        this.setState({ tasks: taskList }, function () {
+            this.updateView();
         });
-
     }
 
-
 }
+
 const styles = StyleSheet.create({
     container: {
         paddingTop: 22,
@@ -208,6 +210,5 @@ const styles = StyleSheet.create({
         flex: 13
     }
 });
-
 
 export default Menu;
