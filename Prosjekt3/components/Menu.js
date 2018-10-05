@@ -15,8 +15,8 @@ class Menu extends Component {
         this.deleteItem = this.deleteItem.bind(this);
         this.openMenu = this.openMenu.bind(this);
         this.updateView = this.updateView.bind(this);
-        this.increment_current = this.increment_current.bind(this);
         this.handleCheckTask = this.handleCheckTask.bind(this);
+        this.updateProgressBar = this.updateProgressBar.bind(this);
 
         /**
          * currentMenu: current menu displayed, null if in main menu.
@@ -34,8 +34,6 @@ class Menu extends Component {
             ],
             tasks: [
             ],
-            completedTasks: 0,
-            totalTasks: 5,
             currentViewItems: [
             ]
         }
@@ -60,8 +58,8 @@ class Menu extends Component {
                                     name={item.title}
                                     id={item.key}
                                     onOpen={this.openMenu}
-                                    complete={this.state.completedTasks}
-                                    total={this.state.totalTasks}
+                                    complete={item.totalDoneTaskCount}
+                                    total={item.totalTaskCount}
                                 />
                                 :
                                 <Task
@@ -86,18 +84,46 @@ class Menu extends Component {
         );
     }
 
+    updateProgressBar() {
+        let totalTasks = 0;
+        let completedTasks = 0;
+        let menuItems = this.state.menuItems;
+        let taskItems = this.state.tasks;
+        for (let i in menuItems) {
+            totalTasks = 0;
+            completedTasks = 0;
+            for (let x in taskItems) {
+                if (menuItems[i].key === taskItems[x].parentID) {
+                    totalTasks = totalTasks + 1;
+                    if (taskItems[x].checked === true) {
+                        completedTasks = completedTasks + 1;
+                    }
+                }
+            }
+            if (totalTasks !== 0) {
+                menuItems[i].totalTaskCount = totalTasks;
+                menuItems[i].totalDoneTaskCount = completedTasks;
+            } else {
+                menuItems[i].totalTaskCount = 1;
+                menuItems[i].totalDoneTaskCount = 0;
+            }
+        }
+        this.setState({ menuItems: menuItems });
+    }
+
     updateView() {
+        this.updateProgressBar();
         let folderID = this.state.currentMenu;
         if (folderID === null) {
             this.setState({ currentViewItems: this.state.menuItems });
         } else {
-            let newCurrentMenu = this.state.tasks.map(
-                function (item) {
-                    if (folderID === item.parentID) {
-                        return item;
-                    }
-                });
-            this.setState({ currentViewItems: newCurrentMenu });
+            console.debug(this.state.currentViewItems);
+            var result = this.state.tasks.filter(obj => {
+                return obj.parentID === folderID
+            })
+            console.log(result);
+            this.setState({ currentViewItems: result });
+
         }
     }
 
@@ -105,7 +131,7 @@ class Menu extends Component {
         let id = this.guid();
         let titleName = this.state.newMenuName;
         if (this.state.currentMenu === null) {
-            let menu = [{ title: titleName, key: id, menu: true }];
+            let menu = [{ title: titleName, key: id, menu: true, totalTaskCount: 1000, totalDoneTaskCount: 1 }];
             this.setState({ menuItems: this.state.menuItems.concat(menu) }, function () {
                 this.updateView();
             })
@@ -155,18 +181,6 @@ class Menu extends Component {
                 .substring(1);
         }
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-    }
-
-    /**
-     * Used for incrementing the value in the progress bar.
-     * If several bars are to be used, an id has to be used
-     * as a parameter.
-     */
-    increment_current() {
-        let prev_s = this.state;
-        this.setState({
-            current_val: prev_s.current_val + 1,
-        })
     }
 
     /*
