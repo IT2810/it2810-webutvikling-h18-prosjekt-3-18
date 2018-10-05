@@ -1,6 +1,7 @@
 import { Pedometer } from "expo";
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
+import ProgressBar from "./ProgressBar";
 
 export class StepCounterComponent extends React.Component {
     constructor(props) {
@@ -47,7 +48,7 @@ export class StepCounterComponent extends React.Component {
         start.setHours(0,0,0,0);
         Pedometer.getStepCountAsync(start, end).then(
             result => {
-                this.setState({ pastStepCount: result.steps });
+                this.setState({ pastStepCount: result.steps});
             },
             error => {
                 this.setState({
@@ -69,12 +70,15 @@ export class StepCounterComponent extends React.Component {
                 <View style={{flex: 5}}>
                     <View style={styles.container}>
                         <Text>
-                            Pedometer.isAvailableAsync(): {this.state.isPedometerAvailable}
-                        </Text>
-                        <Text>
                             Steps taken today: {this.state.pastStepCount}
                         </Text>
                         <Text>Walk! And watch this go up: {this.state.currentStepCount}</Text>
+                        <ProgressBar
+                            current={parseInt(this.state.pastStepCount+2-2)}
+                            max={10000}
+                            height={10}
+                            width={200}
+                        />
                     </View>
                 </View>
             );
