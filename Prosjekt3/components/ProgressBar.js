@@ -9,15 +9,12 @@ import {Bar} from 'react-native-progress';
  * https://github.com/oblador/react-native-progress
  */
 class ProgressBar extends Component {
-        calc_val =
-            parseInt(this.props.current)
-            / parseInt(this.props.max);
 
     render() {
         return (
             <View>
                 <Bar
-                    progress={this.calc_val}
+                    progress={this.props.current / this.props.max}
                     color={'#0F0'}
                     width={this.props.width}
                     height={this.props.height}
@@ -26,10 +23,6 @@ class ProgressBar extends Component {
                     />
             </View>
         )
-    }
-
-    get_calc_val() {
-        return this.calc_val
     }
 }
 
