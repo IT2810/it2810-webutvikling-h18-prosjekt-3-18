@@ -9,7 +9,8 @@ export class StepCounterComponent extends React.Component {
         this.state = {
             isPedometerAvailable: "checking",
             pastStepCount: 0,
-            currentStepCount: 0
+            currentStepCount: 0,
+            dailyGoal: this.props.limit
         };
 
     }
@@ -75,7 +76,7 @@ export class StepCounterComponent extends React.Component {
                         <Text>Walk! And watch this go up: {this.state.currentStepCount}</Text>
                         <ProgressBar
                             current={parseInt(this.state.pastStepCount+2-2)}
-                            max={10000}
+                            max={this.state.dailyGoal}
                             height={10}
                             width={200}
                         />

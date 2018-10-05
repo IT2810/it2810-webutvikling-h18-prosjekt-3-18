@@ -9,7 +9,8 @@ export default class App extends React.Component {
         super();
         this.state = {
             current_val: 13,
-            max_val: 15
+            max_val: 15,
+            dailyGoal: 6000,
         };
 
         this._increment_current = this._increment_current.bind(this);
@@ -19,7 +20,7 @@ export default class App extends React.Component {
         return (
             <View style={{ flex: 5 }}>
                 <View style={styles.container}>
-                        <StepCounterComponent/>
+                        <StepCounterComponent limit={this.state.dailyGoal} />
                 </View>
             </View>
         );
