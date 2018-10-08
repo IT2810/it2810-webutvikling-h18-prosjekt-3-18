@@ -9,7 +9,6 @@ import {Bar} from 'react-native-progress';
  * https://github.com/oblador/react-native-progress
  */
 class ProgressBar extends Component {
-
     render() {
         return (
             <View>
@@ -20,6 +19,7 @@ class ProgressBar extends Component {
                     height={this.props.height}
                     unfilledColor={'#F22'}
                     borderColor={"#000"}
+                    border-radius={'12px'}
                     />
             </View>
         )
