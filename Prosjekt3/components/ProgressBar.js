@@ -13,7 +13,7 @@ class ProgressBar extends Component {
         return (
             <View>
                 <Bar
-                    progress={this.props.current/this.props.max}
+                    progress={this.props.current / this.props.max}
                     color={'#0F0'}
                     width={this.props.width}
                     height={this.props.height}
@@ -23,10 +23,6 @@ class ProgressBar extends Component {
                     />
             </View>
         )
-    }
-
-    get_calc_val() {
-        return this.calc_val
     }
 }
 
