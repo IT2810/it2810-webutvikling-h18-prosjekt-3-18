@@ -7,10 +7,10 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "eject": "expo eject",
-    "test": "node ./node_modules/jest/bin/jest.js --watchAll"
+    "test": "jest"
   },
   "jest": {
-    "preset": "jest-expo"
+    "preset": "react-native"
   },
   "dependencies": {
     "@expo/samples": "2.1.1",
@@ -22,10 +22,13 @@
     "react-native-checkbox": "^2.0.0",
     "react-native-progress": "^3.5.0",
     "react-navigation": "^2.16.0",
-    "react-test-renderer": "latest",
     "ws": "^6.0.0"
   },
   "devDependencies": {
-    "jest-expo": "30.0.0"
+    "babel-jest": "^23.6.0",
+    "babel-preset-react-native": "^4.0.1",
+    "jest": "^23.6.0",
+    "jest-react-native": "^18.0.0",
+    "react-test-renderer": "^16.5.2"
   }
 }
