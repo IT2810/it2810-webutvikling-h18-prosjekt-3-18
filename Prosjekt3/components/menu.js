@@ -7,6 +7,7 @@ import Task from "./Task";
 
 import Header from './Header';
 import TodoList from "./TodoList";
+import {StepCounterComponent} from "./StepCounterComponent";
 
 
 /**
@@ -44,7 +45,8 @@ class Menu extends Component {
             newMenuName: 'Homework',
             menuItems: [],
             tasks: [],
-            currentViewItems: []
+            currentViewItems: [],
+            dailyGoal: 10000
         }
     }
 
@@ -114,6 +116,11 @@ class Menu extends Component {
                     <Button style={styles.button} onPress={this.onAdd} title="Add">Add</Button>
                     {this.state.currentMenu !== null ? <Button style={styles.button} onPress={this.back} title="Back" /> : null}
                     <Button style={styles.button} onPress={this.resetStorage} title="Reset DB">Reset DB</Button>
+                </View>
+                <View style={{ flex: 5 }}>
+                    <View style={styles.container}>
+                        <StepCounterComponent limit={this.state.dailyGoal} />
+                    </View>
                 </View>
             </View>
         );
@@ -253,7 +260,10 @@ class Menu extends Component {
 const styles = StyleSheet.create({
     container: {
         paddingTop: 22,
-        flex: 1
+        flex: 1,
+        // flex: 0.4,
+        // justifyContent: 'center',
+        // alignItems: 'center',
     },
     button: {
         alignItems: 'center',
