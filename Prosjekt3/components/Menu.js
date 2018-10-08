@@ -110,7 +110,7 @@ class Menu extends Component {
                 <View style={{ flex: 1 }}>
                     <TextInput
                         style={{ height: 40, borderTopWidth: 2, marginTop: 20, }}
-                        onChangeText={(newMenuName) => this.thing(newMenuName)}
+                        onChangeText={(newMenuName) => this.setState({ newMenuName: newMenuName })}
                         value={this.state.newMenuName}
                     />
                     <Button style={styles.button} onPress={this.onAdd} title="Add">Add</Button>
