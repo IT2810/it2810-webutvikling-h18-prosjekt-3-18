@@ -1,10 +1,23 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, FlatList, Button, TextInput } from 'react-native';
+import Store from 'react-native-store';
+
 import Item from './Item'
 import Task from "./Task";
 
 import Header from './Header';
 import TodoList from "./TodoList";
+
+
+/**
+ * Library used:
+ * https://github.com/thewei/react-native-store
+ */
+
+const TODO_DB = {
+    'tasks': Store.model('tasks'),
+    'menuItems': Store.model('menuItems')
+};
 
 
 class Menu extends Component {
@@ -17,26 +30,47 @@ class Menu extends Component {
         this.updateView = this.updateView.bind(this);
         this.handleCheckTask = this.handleCheckTask.bind(this);
         this.updateProgressBar = this.updateProgressBar.bind(this);
+        this.resetStorage = this.resetStorage.bind(this);
 
         /**
          * currentMenu: current menu displayed, null if in main menu.
          * newMenuName: Text from textInput.
          * menuItems: menus that can be added with add button if in main menu.
-         * completedTasks: completed tasks for a TodoList. FIXME place inside menuItem
-         * totalTasks: total number of tasks. FIXME see over.
          * tasks: task objects. Belongs to a parent (menuItem).
          * currentViewItems: The current items displayed on the screen. Updates often.
          */
         this.state = {
             currentMenu: null,
             newMenuName: 'Homework',
-            menuItems: [
-            ],
-            tasks: [
-            ],
-            currentViewItems: [
-            ]
+            menuItems: [],
+            tasks: [],
+            currentViewItems: []
         }
+    }
+
+    componentDidMount() {
+        // finding tasks
+        TODO_DB.tasks.find()
+            .then(resp => {
+                console.log(resp);
+                if (resp !== null) {
+                    this.setState({
+                        tasks: resp
+                    })
+                }
+            }
+        );
+
+        // finding menu items
+        TODO_DB.menuItems.find()
+            .then(resp => {
+                if (resp !== null) {
+                    this.setState({
+                        menuItems: resp,
+                    })
+                }
+            }
+        );
     }
 
     render() {
@@ -46,7 +80,7 @@ class Menu extends Component {
                 <FlatList
                     extraData={this.state}
                     style={styles.list}
-                    data={this.state.currentViewItems}
+                    data={this.updateView()}
                     renderItem={({ item }) =>
                         <Item
                             key={item.key}
@@ -79,14 +113,15 @@ class Menu extends Component {
                     />
                     <Button style={styles.button} onPress={this.onAdd} title="Add">Add</Button>
                     {this.state.currentMenu !== null ? <Button style={styles.button} onPress={this.back} title="Back" /> : null}
+                    <Button style={styles.button} onPress={this.resetStorage} title="Reset DB">Reset DB</Button>
                 </View>
             </View>
         );
     }
 
     updateProgressBar() {
-        let totalTasks = 0;
-        let completedTasks = 0;
+        let totalTasks;
+        let completedTasks;
         let menuItems = this.state.menuItems;
         let taskItems = this.state.tasks;
         for (let i in menuItems) {
@@ -111,67 +146,79 @@ class Menu extends Component {
         this.setState({ menuItems: menuItems });
     }
 
+        // this.updateProgressBar(); // fixme do not use updateProgressbar in updateview. Find solution
     updateView() {
-        this.updateProgressBar();
-        let folderID = this.state.currentMenu;
-        if (folderID === null) {
-            this.setState({ currentViewItems: this.state.menuItems });
-        } else {
-            console.debug(this.state.currentViewItems);
-            var result = this.state.tasks.filter(obj => {
-                return obj.parentID === folderID
-            })
-            console.log(result);
-            this.setState({ currentViewItems: result });
-
-        }
+        return (this.state.currentMenu === null) ? this.state.menuItems
+            : this.state.tasks.filter(obj => { return obj.parentID === this.state.currentMenu});
     }
-
     onAdd = e => {
         let id = this.guid();
         let titleName = this.state.newMenuName;
         if (this.state.currentMenu === null) {
             let menu = [{ title: titleName, key: id, menu: true, totalTaskCount: 1000, totalDoneTaskCount: 1 }];
-            this.setState({ menuItems: this.state.menuItems.concat(menu) }, function () {
-                this.updateView();
-            })
+
+            this.setState(() => {
+                const menuItemsCopy = this.state.menuItems;
+                const currentViewItemsCopy = this.state.currentViewItems;
+                return {
+                    menuItems: menuItemsCopy.concat(menu),
+                    currentViewItems: currentViewItemsCopy.concat(menu)
+                }
+            });
+
+            // add to local storage
+            TODO_DB.menuItems.add(menu);
+
         } else {
             let parent = this.state.currentMenu;
             let task = [{ title: titleName, key: id, menu: false, parentID: parent, checked: false }];
-            this.setState({ tasks: this.state.tasks.concat(task) }, function () {
-                this.updateView();
-            });
+            this.setState({ tasks: this.state.tasks.concat(task)});
+
+            // add to local storage
+            TODO_DB.tasks.add(task);
         }
     };
 
     back = e => {
-        this.setState({ currentMenu: null }, function () {
-            this.updateView();
-        });
+        this.setState({ currentMenu: null });
     };
 
     deleteItem = e => {
+        let removeIndex;
         if (this.state.currentMenu === null) {
-            var removeIndex = this.state.menuItems.findIndex(x => x.key == e);
+            removeIndex = this.state.menuItems.findIndex(x => x.key === e);
             let menuList = this.state.menuItems;
-            menuList.splice(removeIndex, 1);
-            this.setState({ menuItems: menuList }, function () {
-                this.updateView();
-            });
+            let removedMenu = menuList.splice(removeIndex, 1);
+
+            this.setState({ menuItems: menuList });
+
+            // removing from local storage
+            TODO_DB.menuItems.remove({
+                where: {
+                    key: removedMenu.key
+                }
+            }).then(resp => {
+                console.log(resp, "removed menu");
+            })
+
         } else {
-            var removeIndex = this.state.tasks.findIndex(x => x.key == e);
+            removeIndex = this.state.tasks.findIndex(x => x.key === e);
             let taskList = this.state.tasks;
-            taskList.splice(removeIndex, 1);
-            this.setState({ tasks: taskList }, function () {
-                this.updateView();
-            });
+            let removedTask = taskList.splice(removeIndex, 1);
+            this.setState({ tasks: taskList });
+
+            TODO_DB.tasks.remove({
+                where: {
+                    key: removedTask.key
+                }
+            }).then(resp => {
+                console.log(resp, "removed task")
+            })
         }
     };
 
     openMenu = e => {
-        this.setState({ currentMenu: e }, function () {
-            this.updateView();
-        });
+        this.setState({ currentMenu: e });
     };
 
     guid() {
@@ -183,23 +230,22 @@ class Menu extends Component {
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
     }
 
-    /*
-        task = [{
-            title: titleName,
-            key: id,
-            menu: false,
-            parentID: parent,
-            checked: false
-        }]
-     */
 
     handleCheckTask(taskID) {
-        var checkedIndex = this.state.tasks.findIndex(x => x.key == taskID);
+        var checkedIndex = this.state.tasks.findIndex(x => x.key === taskID);
         let taskList = this.state.tasks;
         taskList[checkedIndex].checked = !taskList[checkedIndex].checked;
-        this.setState({ tasks: taskList }, function () {
-            this.updateView();
+        this.setState({ tasks: taskList });
+    }
+
+    resetStorage() {
+        TODO_DB.tasks.remove(resp => {
+                console.log("destroyed", resp);
         });
+
+        TODO_DB.menuItems.remove(resp => {
+            console.log("destroyed menuItems", resp);
+        })
     }
 
 }
