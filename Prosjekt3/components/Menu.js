@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, FlatList, Button, TextInput } from 'react-native';
+import {View, StyleSheet, FlatList, Button, TextInput, Text} from 'react-native';
 
 import Item from './Item'
 import Task from "./Task";
@@ -21,14 +21,20 @@ import store from 'react-native-simple-store';
 class Menu extends Component {
     constructor() {
         super();
-        this.onAdd = this.onAdd.bind(this);
         this.guid = this.guid.bind(this);
+
+        // manipulating menuItems and tasks.
+        this.onAdd = this.onAdd.bind(this);
         this.deleteItem = this.deleteItem.bind(this);
         this.openMenu = this.openMenu.bind(this);
         this.updateView = this.updateView.bind(this);
-        this.handleCheckTask = this.handleCheckTask.bind(this);
         this.updateProgressBar = this.updateProgressBar.bind(this);
+
+        this.handleCheckTask = this.handleCheckTask.bind(this);
+
+        // debugging
         this.resetStorage = this.resetStorage.bind(this);
+        this.getStorage = this.getStorage.bind(this);
 
         /**
          * currentMenu: Current menu displayed, null if in main menu.
@@ -45,14 +51,16 @@ class Menu extends Component {
     }
 
     componentDidMount() {
+        // this.resetStorage(); // TODO remove once finished
         store.get(STORE_MENUITEMS)
             .then((resp) => {
                 resp !== null ?
                     this.setState(() => {
-                        const menuItemsCopy = [];
-                        for (let i = 0; i < resp.keys().length; i++) {
-                                menuItemsCopy.push(resp[i]);
-                        }
+                        const menuItemsCopy = resp;
+                        // for (let i in resp) {
+                        //     menuItemsCopy.push(resp[i]);
+                        // }
+
                         return {
                             menuItems: menuItemsCopy
                         };
@@ -66,10 +74,10 @@ class Menu extends Component {
             .then((resp) => {
                 resp !== null ?
                     this.setState(() => {
-                        const tasksCopy = [];
-                        for (let i = 0; i < resp.keys().length; i++) {
-                            tasksCopy.push(resp[i]);
-                        }
+                        const tasksCopy = resp;
+                        // for (let i in resp) {
+                        //     tasksCopy.push(resp[i]);
+                        // }
                         return {
                             tasks: tasksCopy
                         }
@@ -120,7 +128,10 @@ class Menu extends Component {
                     />
                     <Button style={styles.button} onPress={this.onAdd} title="Add">Add</Button>
                     {this.state.currentMenu !== null ? <Button style={styles.button} onPress={this.back} title="Back" /> : null}
+
+                    <Text>Dev Tools</Text>
                     <Button style={styles.button} onPress={this.resetStorage} title="Clear storage [DEBUG]">Clear Storage</Button>
+                    <Button style={styles.button} onPress={this.getStorage} title="Get storage [DEBUG]">Get storage</Button>
                 </View>
                     {/*<View style={styles.container}>
                         <StepCounterComponent limit={10000} />
@@ -157,8 +168,9 @@ class Menu extends Component {
     }
 
     updateView() {
-        return (this.state.currentMenu === null) ? this.state.menuItems
-            : this.state.tasks.filter(obj => { return obj.parentID === this.state.currentMenu});
+        let state = this.state;
+        return (state.currentMenu === null) ? state.menuItems
+            : state.tasks.filter(obj => { return obj.parentID === state.currentMenu});
     }
 
     onAdd = e => {
@@ -220,9 +232,8 @@ class Menu extends Component {
             taskList.splice(removeIndex, 1);
             this.setState(() => {
                 // removing from local storage
-                store.delete(STORE_TASKS)
-                    .then()
-                    .update(STORE_TASKS, taskList);
+                store.delete(STORE_TASKS);
+                store.update(STORE_TASKS, taskList);
 
                 // updating state
                 return {
@@ -249,19 +260,45 @@ class Menu extends Component {
         let taskList = this.state.tasks;
         let checkedIndex = taskList.findIndex(x => x.key === taskID);
         taskList[checkedIndex].checked = !taskList[checkedIndex].checked;
+        store.delete(STORE_TASKS);
+        store.update(STORE_TASKS, taskList);
+
         this.setState({ tasks: taskList });
         this.updateProgressBar();
     }
 
+    /*
+     * Debugger tools
+     */
+
+    /**
+     * Clears the local storage.
+     */
     resetStorage() {
         store.delete(STORE_MENUITEMS);
         store.delete(STORE_TASKS);
         this.setState({
             menuItems: [],
             tasks: []
-        })
+        });
+        console.log("Cleared storage.")
     }
 
+    /**
+     * Prints out elements from storage.
+     */
+    getStorage() {
+        store.get(STORE_MENUITEMS)
+            .then(resp => {
+                console.debug(":::::::::::===================:::::::::::\n" ,
+                    "(1) Printing menuItems", resp, "\n--::::--::::--::::--::::");
+            });
+
+        store.get(STORE_TASKS)
+            .then(resp => {
+                console.debug("(2) Printing tasks", resp)
+            });
+    }
 }
 
 const styles = StyleSheet.create({
