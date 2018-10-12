@@ -3,6 +3,10 @@ import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import ProgressBar from "./ProgressBar";
 
+
+/**
+ *
+ */
 export class StepCounterComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -10,7 +14,6 @@ export class StepCounterComponent extends React.Component {
             isPedometerAvailable: "checking",
             pastStepCount: 0,
             currentStepCount: 0,
-            dailyGoal: this.props.limit
         };
 
     }
@@ -63,8 +66,6 @@ export class StepCounterComponent extends React.Component {
         this._subscription = null;
     };
 
-
-
     render()
         {
             return (
@@ -76,7 +77,7 @@ export class StepCounterComponent extends React.Component {
                         <Text>Walk! And watch this go up: {this.state.currentStepCount}</Text>
                         <ProgressBar
                             current={parseInt(this.state.pastStepCount+2-2)}
-                            max={this.state.dailyGoal}
+                            max={this.props.limit}
                             height={10}
                             width={200}
                         />
