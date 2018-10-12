@@ -219,7 +219,7 @@ class Menu extends Component {
             this.setState(() => {
                 // removing from local storage
                 store.delete(STORE_MENUITEMS);
-                store.update(STORE_MENUITEMS, menuList);
+                store.save(STORE_MENUITEMS, menuList);
 
                 // updating state
                 return {
@@ -233,7 +233,7 @@ class Menu extends Component {
             this.setState(() => {
                 // removing from local storage
                 store.delete(STORE_TASKS);
-                store.update(STORE_TASKS, taskList);
+                store.save(STORE_TASKS, taskList);
 
                 // updating state
                 return {
@@ -261,7 +261,7 @@ class Menu extends Component {
         let checkedIndex = taskList.findIndex(x => x.key === taskID);
         taskList[checkedIndex].checked = !taskList[checkedIndex].checked;
         store.delete(STORE_TASKS);
-        store.update(STORE_TASKS, taskList);
+        store.save(STORE_TASKS, taskList);
 
         this.setState({ tasks: taskList });
         this.updateProgressBar();
