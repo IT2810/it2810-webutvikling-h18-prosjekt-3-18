@@ -8,7 +8,7 @@ import Task from "./Task";
 
 import Header from './Header';
 import TodoList from "./TodoList";
-import {StepCounterComponent} from "./StepCounterComponent";
+import { StepCounterComponent } from "./StepCounterComponent";
 
 
 /**
@@ -62,7 +62,7 @@ class Menu extends Component {
                     })
                 }
             }
-        );
+            );
 
         // finding menu items
         TODO_DB.menuItems.find()
@@ -73,13 +73,13 @@ class Menu extends Component {
                     })
                 }
             }
-        );
+            );
     }
 
     render() {
         return (
-            <View style={styles.container}>
-                <Header title={this.state.currentMenu} />
+            <View style={{ flex: 1 }}>
+                <Header title={this.state.currentMenu} style={{ flex: 0.3 }} />
                 <FlatList
                     extraData={this.state}
                     style={styles.list}
@@ -108,10 +108,10 @@ class Menu extends Component {
                         </Item>
                     }
                 />
-                <View style={{ flex: 1 }}>
+                <View style={{ flex: 0.3 }}>
                     <TextInput id="TextInputField"
                         style={{ height: 40, borderTopWidth: 2, marginTop: 20, }}
-                        onChangeText={(newMenuName) => this.setState({newMenuName: newMenuName})}
+                        onChangeText={(newMenuName) => this.setState({ newMenuName: newMenuName })}
                         placeholder={"Navn på Todo her"}
                         placeholderTextColor={"black"}
                         ref={input => { this.textInput = input }}
@@ -121,17 +121,17 @@ class Menu extends Component {
                             <MaterialIcons name="add-circle-outline" size={40} color="black" />
                         </View>
                     </TouchableOpacity>
-                    {this.state.currentMenu !== null ?   <TouchableOpacity title="Back" onPress={this.back} underlayColor="white">
+                    {this.state.currentMenu !== null ? <TouchableOpacity title="Back" onPress={this.back} underlayColor="white">
                         <View style={styles.button}>
                             <MaterialIcons name="arrow-back" size={40} color="black" />
                         </View>
-                    </TouchableOpacity>: null}
+                    </TouchableOpacity> : null}
                 </View>
-                <View style={{ flex: 5 }}>
+                <View style={{ flex: 0.3 }}>
                     {this.state.currentMenu === null ?
-                    <View style={styles.container}>
-                        <StepCounterComponent limit={this.state.dailyGoal} />
-                    </View>: null}
+                        <View style={styles.container}>
+                            <StepCounterComponent limit={this.state.dailyGoal} />
+                        </View> : null}
                 </View>
             </View>
         );
@@ -164,10 +164,10 @@ class Menu extends Component {
         this.setState({ menuItems: menuItems });
     }
 
-        // this.updateProgressBar(); // fixme do not use updateProgressbar in updateview. Find solution
+    // this.updateProgressBar(); // fixme do not use updateProgressbar in updateview. Find solution
     updateView() {
         return (this.state.currentMenu === null) ? this.state.menuItems
-            : this.state.tasks.filter(obj => { return obj.parentID === this.state.currentMenu});
+            : this.state.tasks.filter(obj => { return obj.parentID === this.state.currentMenu });
     }
     onAdd = e => {
         let id = this.guid();
@@ -189,7 +189,7 @@ class Menu extends Component {
         } else {
             let parent = this.state.currentMenu;
             let task = [{ title: titleName, key: id, menu: false, parentID: parent, checked: false }];
-            this.setState({ tasks: this.state.tasks.concat(task)});
+            this.setState({ tasks: this.state.tasks.concat(task) });
 
             // add to local storage
             TODO_DB.tasks.add(task);
@@ -258,7 +258,7 @@ class Menu extends Component {
 
     resetStorage() {
         TODO_DB.tasks.remove(resp => {
-                console.log("destroyed", resp);
+            console.log("destroyed", resp);
         });
 
         TODO_DB.menuItems.remove(resp => {
@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
     },
     list: {
         height: 100,
-        flex: 80,
+        flex: 5,
     }
 });
 

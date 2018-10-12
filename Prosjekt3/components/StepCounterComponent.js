@@ -1,6 +1,6 @@
 import { Pedometer } from "expo";
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import ProgressBar from "./ProgressBar";
 
 export class StepCounterComponent extends React.Component {
@@ -16,7 +16,7 @@ export class StepCounterComponent extends React.Component {
     }
 
     componentDidMount() {
-            this._subscribe();
+        this._subscribe();
 
     }
 
@@ -47,10 +47,10 @@ export class StepCounterComponent extends React.Component {
         );
         const end = new Date();
         const start = new Date();
-        start.setHours(0,0,0,0);
+        start.setHours(0, 0, 0, 0);
         Pedometer.getStepCountAsync(start, end).then(
             result => {
-                this.setState({ pastStepCount: result.steps});
+                this.setState({ pastStepCount: result.steps });
             },
             error => {
                 this.setState({
@@ -66,31 +66,29 @@ export class StepCounterComponent extends React.Component {
 
 
 
-    render()
-        {
-            return (
-                <View style={{flex: 5}}>
-                    <View style={styles.container}>
-                        <Text>
-                            Steps taken today: {this.state.pastStepCount} / {this.state.dailyGoal}
-                        </Text>
-                        <ProgressBar
-                            current={parseInt(this.state.pastStepCount+2-2)}
-                            max={this.state.dailyGoal}
-                            height={10}
-                            width={200}
-                        />
-                    </View>
+    render() {
+        return (
+            <View>
+                <View style={styles.container}>
+                    <Text>
+                        Steps taken today: {this.state.pastStepCount} / {this.state.dailyGoal}
+                    </Text>
+                    <ProgressBar
+                        current={parseInt(this.state.pastStepCount + 2 - 2)}
+                        max={this.state.dailyGoal}
+                        height={10}
+                        width={200}
+                    />
                 </View>
-            );
-        }
+            </View>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 0.4,
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     }
 });
 
