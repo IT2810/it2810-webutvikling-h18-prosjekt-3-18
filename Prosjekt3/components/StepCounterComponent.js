@@ -16,7 +16,8 @@ export class StepCounterComponent extends React.Component {
     }
 
     componentDidMount() {
-        this._subscribe();
+            this._subscribe();
+
     }
 
     componentWillUnmount() {
@@ -71,9 +72,8 @@ export class StepCounterComponent extends React.Component {
                 <View style={{flex: 5}}>
                     <View style={styles.container}>
                         <Text>
-                            Steps taken today: {this.state.pastStepCount}
+                            Steps taken today: {this.state.pastStepCount} / {this.state.dailyGoal}
                         </Text>
-                        <Text>Walk! And watch this go up: {this.state.currentStepCount}</Text>
                         <ProgressBar
                             current={parseInt(this.state.pastStepCount+2-2)}
                             max={this.state.dailyGoal}

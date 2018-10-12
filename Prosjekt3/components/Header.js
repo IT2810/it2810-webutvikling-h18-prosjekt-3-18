@@ -11,7 +11,7 @@ class Header extends Component {
     render() {
         return (
             <View>
-                <Text> {this.props.title} </Text>
+                <Text> {this.props.title}  abdaksdaskjs</Text>
             </View>
         );
     }

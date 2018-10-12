@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, FlatList, Button, TextInput } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity } from 'react-native';
 import Store from 'react-native-store';
+import { MaterialIcons } from '@expo/vector-icons';
 
 import Item from './Item'
 import Task from "./Task";
@@ -108,19 +109,29 @@ class Menu extends Component {
                     }
                 />
                 <View style={{ flex: 1 }}>
-                    <TextInput
+                    <TextInput id="TextInputField"
                         style={{ height: 40, borderTopWidth: 2, marginTop: 20, }}
-                        onChangeText={(newMenuName) => this.thing(newMenuName)}
-                        value={this.state.newMenuName}
+                        onChangeText={(newMenuName) => this.setState({newMenuName: newMenuName})}
+                        placeholder={"Navn på Todo her"}
+                        placeholderTextColor={"black"}
+                        ref={input => { this.textInput = input }}
                     />
-                    <Button style={styles.button} onPress={this.onAdd} title="Add">Add</Button>
-                    {this.state.currentMenu !== null ? <Button style={styles.button} onPress={this.back} title="Back" /> : null}
-                    <Button style={styles.button} onPress={this.resetStorage} title="Reset DB">Reset DB</Button>
+                    <TouchableOpacity title="Add" onPress={this.onAdd}>
+                        <View style={styles.button}>
+                            <MaterialIcons name="add-circle-outline" size={40} color="black" />
+                        </View>
+                    </TouchableOpacity>
+                    {this.state.currentMenu !== null ?   <TouchableOpacity title="Back" onPress={this.back} underlayColor="white">
+                        <View style={styles.button}>
+                            <MaterialIcons name="arrow-back" size={40} color="black" />
+                        </View>
+                    </TouchableOpacity>: null}
                 </View>
                 <View style={{ flex: 5 }}>
+                    {this.state.currentMenu === null ?
                     <View style={styles.container}>
                         <StepCounterComponent limit={this.state.dailyGoal} />
-                    </View>
+                    </View>: null}
                 </View>
             </View>
         );
@@ -163,7 +174,6 @@ class Menu extends Component {
         let titleName = this.state.newMenuName;
         if (this.state.currentMenu === null) {
             let menu = [{ title: titleName, key: id, menu: true, totalTaskCount: 1000, totalDoneTaskCount: 1 }];
-
             this.setState(() => {
                 const menuItemsCopy = this.state.menuItems;
                 const currentViewItemsCopy = this.state.currentViewItems;
@@ -184,6 +194,7 @@ class Menu extends Component {
             // add to local storage
             TODO_DB.tasks.add(task);
         }
+        this.textInput.clear()
     };
 
     back = e => {
@@ -225,7 +236,7 @@ class Menu extends Component {
     };
 
     openMenu = e => {
-        this.setState({ currentMenu: e });
+        this.setState({ currentMenu: e })
     };
 
     guid() {
@@ -267,8 +278,10 @@ const styles = StyleSheet.create({
     },
     button: {
         alignItems: 'center',
-        backgroundColor: '#DDDDDD',
         padding: 10,
+        marginTop: 10,
+        borderRadius: 100,
+        alignSelf: 'center',
     },
     item: {
         padding: 10,
@@ -276,8 +289,8 @@ const styles = StyleSheet.create({
         height: 44,
     },
     list: {
-        height: 10,
-        flex: 13
+        height: 100,
+        flex: 80,
     }
 });
 

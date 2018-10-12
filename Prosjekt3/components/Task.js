@@ -14,7 +14,7 @@ class Task extends Component {
 
     render() {
         return (
-            <View>
+            <View style={{ flexDirection: 'row', flex:0.95, marginLeft:2, paddingTop:2, marginTop:2}}>
                 <CheckBox
                     isChecked={this.props.checked}
                     onClick={(e) => {
@@ -23,6 +23,7 @@ class Task extends Component {
                     }
                     }
                 />
+                <Text> {this.props.name} </Text>
             </View>
         )
     }

@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
-import { View, Text, Button } from 'react-native';
+import React, { Component,  } from 'react';
+import { View, Text, Button, TouchableOpacity} from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 
 class Item extends Component {
     constructor(props) {
@@ -11,7 +12,9 @@ class Item extends Component {
         return (
             <View style={{ borderTopWidth: 1, flexDirection: 'row' }}>
                 {this.props.children}
-                <Button onPress={this.onPressDelete} title="Delete"/>
+                <TouchableOpacity title="Delete" onPress={this.onPressDelete}>
+                    <MaterialIcons name="delete" size={40} color="black" />
+                </TouchableOpacity>
             </View>
         );
     }
