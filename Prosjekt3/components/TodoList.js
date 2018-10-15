@@ -11,9 +11,11 @@ class TodoList extends Component {
 
     render() {
         return (
-        <TouchableOpacity title="Open" onPress={this.onPressOpen}>
             <View style={{ flexDirection: 'row', flex:0.95, marginLeft:2, paddingTop:2, marginTop:2,  alignItems: 'stretch'}}>
-                <Text> {this.props.name}</Text>
+                <TouchableOpacity title="Open" onPress={this.onPressOpen}>
+                <Text style={{width:100}}> {this.props.name}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity title="Open" onPress={this.onPressOpen}>
                     <View style={{alignItems: 'center', marginLeft: 40, paddingTop: 5}}>
                     <ProgressBar
                         current={this.props.complete}
@@ -21,8 +23,9 @@ class TodoList extends Component {
                         height={10}
                         width={100}/>
                     </View>
+                </TouchableOpacity>
             </View>
-        </TouchableOpacity>
+
         )
     }
 

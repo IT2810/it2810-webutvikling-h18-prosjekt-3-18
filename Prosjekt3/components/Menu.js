@@ -78,8 +78,8 @@ class Menu extends Component {
 
     render() {
         return (
-            <View style={{ flex: 1 }}>
-                <Header title={this.state.currentMenu} style={{ flex: 0.3 }} />
+            <View style={styles.container}>
+                <Header title={this.state.currentMenu} style={styles.header} />
                 <FlatList
                     extraData={this.state}
                     style={styles.list}
@@ -272,6 +272,7 @@ const styles = StyleSheet.create({
     container: {
         paddingTop: 22,
         flex: 1,
+        backgroundColor: '#FFF999'
         // flex: 0.4,
         // justifyContent: 'center',
         // alignItems: 'center',
@@ -291,6 +292,8 @@ const styles = StyleSheet.create({
     list: {
         height: 100,
         flex: 5,
+    },
+    header: {
     }
 });
 

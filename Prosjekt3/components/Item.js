@@ -10,7 +10,7 @@ class Item extends Component {
 
     render() {
         return (
-            <View style={{ borderTopWidth: 1, flexDirection: 'row' }}>
+            <View style={{ borderTopWidth: 1, flexDirection: 'row', borderStyle: 'dashed'}}>
                 {this.props.children}
                 <TouchableOpacity title="Delete" onPress={this.onPressDelete}>
                     <MaterialIcons name="delete" size={40} color="black" />
