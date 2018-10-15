@@ -36,7 +36,7 @@ class Menu extends Component {
         this.resetStorage = this.resetStorage.bind(this);
         this.getStorage = this.getStorage.bind(this);
 
-        /**
+        /*
          * currentMenu: Current menu displayed, null if in main menu.
          * newMenuName: Text from textInput.
          * menuItems: Menus that can be added with add button if in main menu. Saved to local storage
@@ -51,7 +51,7 @@ class Menu extends Component {
     }
 
     componentDidMount() {
-        // this.resetStorage(); // TODO remove once finished
+        // this.resetStorage(); // Used when the app crashes because of the local storage
         store.get(STORE_MENUITEMS)
             .then((resp) => {
                 resp !== null ?
@@ -83,7 +83,11 @@ class Menu extends Component {
                         }
                     })
                     : null;
-            }).catch(error => {
+            })
+            .then(() => {
+                this.updateProgressBar()
+            })
+            .catch(error => {
             console.error(error.message);
         });
     }
