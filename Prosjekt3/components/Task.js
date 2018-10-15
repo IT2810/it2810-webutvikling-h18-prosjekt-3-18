@@ -14,7 +14,7 @@ class Task extends Component {
 
     render() {
         return (
-            <View style={{ flexDirection: 'row', flex:0.95, marginLeft:2, paddingTop:2, marginTop:2}}>
+            <View style={{ flexDirection: 'row', flex: 0.95, marginLeft: 2, paddingTop: 2, marginTop: 2 }} style={this.greyStyle()}>
                 <CheckBox
                     isChecked={this.props.checked}
                     onClick={(e) => {
@@ -26,6 +26,15 @@ class Task extends Component {
                 <Text> {this.props.name} </Text>
             </View>
         )
+    }
+}
+
+greyStyle = function () {
+    if (this.props.checked === true) {
+        return {
+            borderRadius: 12,
+            background: 'grey',
+        }
     }
 }
 

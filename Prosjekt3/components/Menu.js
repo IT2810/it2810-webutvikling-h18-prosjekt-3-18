@@ -16,10 +16,7 @@ import { StepCounterComponent } from "./StepCounterComponent";
  * https://github.com/thewei/react-native-store
  */
 
-const TODO_DB = {
-    'tasks': Store.model('tasks'),
-    'menuItems': Store.model('menuItems')
-};
+
 
 
 class Menu extends Component {
@@ -51,35 +48,10 @@ class Menu extends Component {
         }
     }
 
-    componentDidMount() {
-        // finding tasks
-        TODO_DB.tasks.find()
-            .then(resp => {
-                console.log(resp);
-                if (resp !== null) {
-                    this.setState({
-                        tasks: resp
-                    })
-                }
-            }
-            );
-
-        // finding menu items
-        TODO_DB.menuItems.find()
-            .then(resp => {
-                if (resp !== null) {
-                    this.setState({
-                        menuItems: resp,
-                    })
-                }
-            }
-            );
-    }
-
     render() {
         return (
-            <View style={styles.container}>
-                <Header title={this.state.currentMenu} style={styles.header} />
+            <View style={{ flex: 1 }}>
+                <Header title={this.state.currentMenu} style={{ flex: 0.5 }} />
                 <FlatList
                     extraData={this.state}
                     style={styles.list}
@@ -184,7 +156,6 @@ class Menu extends Component {
             });
 
             // add to local storage
-            TODO_DB.menuItems.add(menu);
 
         } else {
             let parent = this.state.currentMenu;
@@ -192,7 +163,6 @@ class Menu extends Component {
             this.setState({ tasks: this.state.tasks.concat(task) });
 
             // add to local storage
-            TODO_DB.tasks.add(task);
         }
         this.textInput.clear()
     };
@@ -210,28 +180,11 @@ class Menu extends Component {
 
             this.setState({ menuItems: menuList });
 
-            // removing from local storage
-            TODO_DB.menuItems.remove({
-                where: {
-                    key: removedMenu.key
-                }
-            }).then(resp => {
-                console.log(resp, "removed menu");
-            })
-
         } else {
             removeIndex = this.state.tasks.findIndex(x => x.key === e);
             let taskList = this.state.tasks;
             let removedTask = taskList.splice(removeIndex, 1);
             this.setState({ tasks: taskList });
-
-            TODO_DB.tasks.remove({
-                where: {
-                    key: removedTask.key
-                }
-            }).then(resp => {
-                console.log(resp, "removed task")
-            })
         }
     };
 
@@ -256,23 +209,12 @@ class Menu extends Component {
         this.setState({ tasks: taskList });
     }
 
-    resetStorage() {
-        TODO_DB.tasks.remove(resp => {
-            console.log("destroyed", resp);
-        });
-
-        TODO_DB.menuItems.remove(resp => {
-            console.log("destroyed menuItems", resp);
-        })
-    }
-
 }
 
 const styles = StyleSheet.create({
     container: {
         paddingTop: 22,
         flex: 1,
-        backgroundColor: '#FFF999'
         // flex: 0.4,
         // justifyContent: 'center',
         // alignItems: 'center',
@@ -292,8 +234,6 @@ const styles = StyleSheet.create({
     list: {
         height: 100,
         flex: 5,
-    },
-    header: {
     }
 });
 
