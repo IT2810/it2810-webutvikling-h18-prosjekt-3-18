@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity } from 'react-native';
 import Store from 'react-native-store';
 import { MaterialIcons } from '@expo/vector-icons';
+import Prompt from 'react-native-prompt-crossplatform';
 
 import Item from './Item'
 import Task from "./Task";
@@ -33,7 +34,7 @@ class Menu extends Component {
         this.handleCheckTask = this.handleCheckTask.bind(this);
         this.updateProgressBar = this.updateProgressBar.bind(this);
         this.resetStorage = this.resetStorage.bind(this);
-
+        this.openPrompt = this.openPrompt.bind(this);
         /**
          * currentMenu: current menu displayed, null if in main menu.
          * newMenuName: Text from textInput.
@@ -43,11 +44,12 @@ class Menu extends Component {
          */
         this.state = {
             currentMenu: null,
-            newMenuName: 'Homework',
+            newMenuName: '',
             menuItems: [],
             tasks: [],
             currentViewItems: [],
-            dailyGoal: 10000
+            dailyGoal: 10000,
+            visiblePrompt: false
         }
     }
 
@@ -109,14 +111,32 @@ class Menu extends Component {
                     }
                 />
                 <View style={{ flex: 0.3 }}>
-                    <TextInput id="TextInputField"
-                        style={{ height: 40, borderTopWidth: 2, marginTop: 20, }}
-                        onChangeText={(newMenuName) => this.setState({ newMenuName: newMenuName })}
-                        placeholder={"Navn på Todo her"}
-                        placeholderTextColor={"black"}
-                        ref={input => { this.textInput = input }}
-                    />
-                    <TouchableOpacity title="Add" onPress={this.onAdd}>
+                    <View>
+                        <Prompt
+                            title="Say something"
+                            inputPlaceholder="Enter Some Text"
+                            isVisible={this.state.visiblePrompt}
+                            onChangeText={(newMenuName) => {
+                                this.setState({ newMenuName: newMenuName });
+                            }}
+                            onCancel={() => {
+                                this.setState({
+                                    newMenuName: '',
+                                    visiblePrompt: false,
+                                });
+                            }}
+                            onSubmit={() => {
+                                if(this.state.newMenuName!==''){
+                                    this.onAdd();
+                                    this.setState({
+                                        visiblePrompt: false,
+                                    });
+                                }
+
+                            }}
+                        />
+                    </View>
+                    <TouchableOpacity title="Add" onPress={this.openPrompt}>
                         <View style={styles.button}>
                             <MaterialIcons name="add-circle-outline" size={40} color="black" />
                         </View>
@@ -194,9 +214,13 @@ class Menu extends Component {
             // add to local storage
             TODO_DB.tasks.add(task);
         }
-        this.textInput.clear()
     };
-
+    openPrompt = () => {
+        this.setState({
+            newMenuName: '',
+            visiblePrompt: true
+        });
+    }
     back = e => {
         this.setState({ currentMenu: null });
     };
