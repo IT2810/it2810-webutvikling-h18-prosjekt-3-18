@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity } from 'react-native';
+
+import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity, Button } from 'react-native';
 import Store from 'react-native-store';
 import { MaterialIcons } from '@expo/vector-icons';
 import Prompt from 'react-native-prompt-crossplatform';
@@ -12,35 +13,39 @@ import TodoList from "./TodoList";
 import { StepCounterComponent } from "./StepCounterComponent";
 
 
+const STORE_TASKS = 'tasks';
+const STORE_MENUITEMS = 'menuItems';
+
 /**
- * Library used:
- * https://github.com/thewei/react-native-store
+ * Library used for AsyncStorage:
+ * https://github.com/jasonmerino/react-native-simple-store
  */
-
-const TODO_DB = {
-    'tasks': Store.model('tasks'),
-    'menuItems': Store.model('menuItems')
-};
-
+import store from 'react-native-simple-store';
 
 class Menu extends Component {
     constructor() {
         super();
-        this.onAdd = this.onAdd.bind(this);
         this.guid = this.guid.bind(this);
+
+        // manipulating menuItems and tasks.
+        this.onAdd = this.onAdd.bind(this);
         this.deleteItem = this.deleteItem.bind(this);
         this.openMenu = this.openMenu.bind(this);
         this.updateView = this.updateView.bind(this);
-        this.handleCheckTask = this.handleCheckTask.bind(this);
         this.updateProgressBar = this.updateProgressBar.bind(this);
-        this.resetStorage = this.resetStorage.bind(this);
+
+        this.handleCheckTask = this.handleCheckTask.bind(this);
         this.openPrompt = this.openPrompt.bind(this);
+
+        // debugging
+        this.resetStorage = this.resetStorage.bind(this);
+        this.getStorage = this.getStorage.bind(this);
+
         /**
-         * currentMenu: current menu displayed, null if in main menu.
+         * currentMenu: Current menu displayed, null if in main menu.
          * newMenuName: Text from textInput.
-         * menuItems: menus that can be added with add button if in main menu.
-         * tasks: task objects. Belongs to a parent (menuItem).
-         * currentViewItems: The current items displayed on the screen. Updates often.
+         * menuItems: Menus that can be added with add button if in main menu. Saved to local storage
+         * tasks: Task objects. Belongs to a parent (menuItem). Saved to local storage.
          */
         this.state = {
             currentMenu: null,
@@ -54,28 +59,41 @@ class Menu extends Component {
     }
 
     componentDidMount() {
-        // finding tasks
-        TODO_DB.tasks.find()
-            .then(resp => {
-                console.log(resp);
-                if (resp !== null) {
-                    this.setState({
-                        tasks: resp
-                    })
-                }
-            }
-            );
+        // this.resetStorage(); // TODO remove once finished
+        store.get(STORE_MENUITEMS)
+            .then((resp) => {
+                resp !== null ?
+                    this.setState(() => {
+                        const menuItemsCopy = resp;
+                        // for (let i in resp) {
+                        //     menuItemsCopy.push(resp[i]);
+                        // }
 
-        // finding menu items
-        TODO_DB.menuItems.find()
-            .then(resp => {
-                if (resp !== null) {
-                    this.setState({
-                        menuItems: resp,
+                        return {
+                            menuItems: menuItemsCopy
+                        };
                     })
-                }
-            }
-            );
+                    : null;
+            }).catch(error => {
+            console.error(error.message);
+        });
+
+        store.get(STORE_TASKS)
+            .then((resp) => {
+                resp !== null ?
+                    this.setState(() => {
+                        const tasksCopy = resp;
+                        // for (let i in resp) {
+                        //     tasksCopy.push(resp[i]);
+                        // }
+                        return {
+                            tasks: tasksCopy
+                        }
+                    })
+                    : null;
+            }).catch(error => {
+            console.error(error.message);
+        });
     }
 
     render() {
@@ -161,6 +179,9 @@ class Menu extends Component {
                         <View style={styles.container}>
                             <StepCounterComponent limit={this.state.dailyGoal} />
                         </View> : null}
+                    <Text>Dev Tools</Text>
+                    <Button style={styles.button} onPress={this.resetStorage} title="Clear storage [DEBUG]">Clear Storage</Button>
+                    <Button style={styles.button} onPress={this.getStorage} title="Get storage [DEBUG]">Get storage</Button>
                 </View>
             </View>
         );
@@ -193,35 +214,43 @@ class Menu extends Component {
         this.setState({ menuItems: menuItems });
     }
 
-    // this.updateProgressBar(); // fixme do not use updateProgressbar in updateview. Find solution
+
     updateView() {
-        return (this.state.currentMenu === null) ? this.state.menuItems
-            : this.state.tasks.filter(obj => { return obj.parentID === this.state.currentMenu });
+        let state = this.state;
+        return (state.currentMenu === null) ? state.menuItems
+            : state.tasks.filter(obj => { return obj.parentID === state.currentMenu});
     }
+
     onAdd = e => {
         let id = this.guid();
         let titleName = this.state.newMenuName;
         if (this.state.currentMenu === null) {
-            let menu = [{ title: titleName, key: id, menu: true, totalTaskCount: 1000, totalDoneTaskCount: 1 }];
+            let menu = { title: titleName, key: id, menu: true, totalTaskCount: 1000, totalDoneTaskCount: 1 };
             this.setState(() => {
                 const menuItemsCopy = this.state.menuItems;
-                const currentViewItemsCopy = this.state.currentViewItems;
+                menuItemsCopy.push(menu);
                 return {
-                    menuItems: menuItemsCopy.concat(menu),
-                    currentViewItems: currentViewItemsCopy.concat(menu)
+                    menuItems: menuItemsCopy
+                }
+            });
+            // add to local storage
+            store.push(STORE_MENUITEMS, menu)
+                .then(console.log(menu, "pushed to local storage."));
+
+        } else {
+            let parent = this.state.currentMenu;
+            let task = { title: titleName, key: id, menu: false, parentID: parent, checked: false };
+            this.setState(() => {
+                const tasksCopy = this.state.tasks;
+                tasksCopy.push(task);
+                return {
+                    tasks: tasksCopy
                 }
             });
 
             // add to local storage
-            TODO_DB.menuItems.add(menu);
-
-        } else {
-            let parent = this.state.currentMenu;
-            let task = [{ title: titleName, key: id, menu: false, parentID: parent, checked: false }];
-            this.setState({ tasks: this.state.tasks.concat(task) });
-
-            // add to local storage
-            TODO_DB.tasks.add(task);
+            store.push(STORE_TASKS, task)
+                .then(console.log(task, "pushed to local storage"));
         }
     };
     openPrompt = () => {
@@ -237,34 +266,33 @@ class Menu extends Component {
     deleteItem = e => {
         let removeIndex;
         if (this.state.currentMenu === null) {
-            removeIndex = this.state.menuItems.findIndex(x => x.key === e);
             let menuList = this.state.menuItems;
-            let removedMenu = menuList.splice(removeIndex, 1);
+            removeIndex = menuList.findIndex(x => x.key === e);
+            menuList.splice(removeIndex, 1);
+            this.setState(() => {
+                // removing from local storage
+                store.delete(STORE_MENUITEMS);
+                store.save(STORE_MENUITEMS, menuList);
 
-            this.setState({ menuItems: menuList });
-
-            // removing from local storage
-            TODO_DB.menuItems.remove({
-                where: {
-                    key: removedMenu.key
+                // updating state
+                return {
+                    menuItems: menuList
                 }
-            }).then(resp => {
-                console.log(resp, "removed menu");
-            })
-
+            });
         } else {
-            removeIndex = this.state.tasks.findIndex(x => x.key === e);
             let taskList = this.state.tasks;
-            let removedTask = taskList.splice(removeIndex, 1);
-            this.setState({ tasks: taskList });
+            removeIndex = taskList.findIndex(x => x.key === e);
+            taskList.splice(removeIndex, 1);
+            this.setState(() => {
+                // removing from local storage
+                store.delete(STORE_TASKS);
+                store.save(STORE_TASKS, taskList);
 
-            TODO_DB.tasks.remove({
-                where: {
-                    key: removedTask.key
+                // updating state
+                return {
+                    tasks: taskList
                 }
-            }).then(resp => {
-                console.log(resp, "removed task")
-            })
+            });
         }
     };
 
@@ -281,24 +309,49 @@ class Menu extends Component {
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
     }
 
-
     handleCheckTask(taskID) {
-        var checkedIndex = this.state.tasks.findIndex(x => x.key === taskID);
         let taskList = this.state.tasks;
+        let checkedIndex = taskList.findIndex(x => x.key === taskID);
         taskList[checkedIndex].checked = !taskList[checkedIndex].checked;
+        store.delete(STORE_TASKS);
+        store.save(STORE_TASKS, taskList);
+
         this.setState({ tasks: taskList });
+        this.updateProgressBar();
     }
 
+    /*
+     * Debugger tools
+     */
+
+    /**
+     * Clears the local storage.
+     */
     resetStorage() {
-        TODO_DB.tasks.remove(resp => {
-            console.log("destroyed", resp);
+        store.delete(STORE_MENUITEMS);
+        store.delete(STORE_TASKS);
+        this.setState({
+            menuItems: [],
+            tasks: []
         });
-
-        TODO_DB.menuItems.remove(resp => {
-            console.log("destroyed menuItems", resp);
-        })
+        console.log("Cleared storage.")
     }
 
+    /**
+     * Prints out elements from storage.
+     */
+    getStorage() {
+        store.get(STORE_MENUITEMS)
+            .then(resp => {
+                console.debug(":::::::::::===================:::::::::::\n" ,
+                    "(1) Printing menuItems", resp, "\n--::::--::::--::::--::::");
+            });
+
+        store.get(STORE_TASKS)
+            .then(resp => {
+                console.debug("(2) Printing tasks", resp)
+            });
+    }
 }
 
 const styles = StyleSheet.create({
