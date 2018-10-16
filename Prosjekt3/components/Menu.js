@@ -34,6 +34,9 @@ class Menu extends Component {
         this.updateProgressBar = this.updateProgressBar.bind(this);
         this.resetStorage = this.resetStorage.bind(this);
 
+
+        this.getMenuName = this.getMenuName.bind(this);
+
         /**
          * currentMenu: current menu displayed, null if in main menu.
          * newMenuName: Text from textInput.
@@ -79,7 +82,11 @@ class Menu extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Header title={this.state.currentMenu} style={styles.header} />
+                <Header menu={this.state.currentMenu}
+                        title={this.getMenuName()}
+                        back={this.back}
+                        styleHeader={styles.header}
+                        styleButton={styles.button} />
                 <FlatList
                     extraData={this.state}
                     style={styles.list}
@@ -256,6 +263,16 @@ class Menu extends Component {
         this.setState({ tasks: taskList });
     }
 
+    getMenuName() {
+        let id = this.state.currentMenu;
+        if (id === null) {
+            return 'Main Menu';
+        }
+        let menu = this.state.menuItems;
+        let index = menu.findIndex(x => x.key === id);
+        return menu[index].title;
+    }
+
     resetStorage() {
         TODO_DB.tasks.remove(resp => {
             console.log("destroyed", resp);
@@ -272,10 +289,6 @@ const styles = StyleSheet.create({
     container: {
         paddingTop: 22,
         flex: 1,
-        backgroundColor: '#FFF999'
-        // flex: 0.4,
-        // justifyContent: 'center',
-        // alignItems: 'center',
     },
     button: {
         alignItems: 'center',
@@ -294,6 +307,9 @@ const styles = StyleSheet.create({
         flex: 5,
     },
     header: {
+        flexWrap: 'wrap',
+        alignItems: 'flex-start',
+        flexDirection: 'row'
     }
 });
 
