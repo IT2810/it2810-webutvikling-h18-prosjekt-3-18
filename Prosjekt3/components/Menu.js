@@ -115,9 +115,9 @@ class Menu extends Component {
                         </Item>
                     }
                 />
-                <View style={{ flex: 0.3 }}>
+                <View style={styles.subComponents}>
                     <TextInput id="TextInputField"
-                        style={{ height: 40, borderTopWidth: 2, marginTop: 20, }}
+                        style={styles.input}
                         onChangeText={(newMenuName) => this.setState({ newMenuName: newMenuName })}
                         placeholder={"Navn på Todo her"}
                         placeholderTextColor={"black"}
@@ -134,7 +134,7 @@ class Menu extends Component {
                         </View>
                     </TouchableOpacity> : null}
                 </View>
-                <View style={{ flex: 0.3 }}>
+                <View style={styles.subComponents}>
                     {this.state.currentMenu === null ?
                         <View style={styles.container}>
                             <StepCounterComponent limit={this.state.dailyGoal} />
@@ -307,10 +307,16 @@ const styles = StyleSheet.create({
         flex: 5,
     },
     header: {
-        flexWrap: 'wrap',
-        alignItems: 'flex-start',
-        flexDirection: 'row'
+    },
+    subComponents: {
+        flex: 0.3
+    },
+    input: {
+        height: 40,
+        borderTopWidth: 2,
+        marginTop: 20
     }
+
 });
 
 export default Menu;

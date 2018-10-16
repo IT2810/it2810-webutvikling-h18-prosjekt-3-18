@@ -14,7 +14,7 @@ class Task extends Component {
 
     render() {
         return (
-            <View style={{ flexDirection: 'row', flex:0.95, marginLeft:2, paddingTop:2, marginTop:2}}>
+            <View style={styles.container}>
                 <CheckBox
                     isChecked={this.props.checked}
                     onClick={(e) => {
@@ -29,5 +29,16 @@ class Task extends Component {
     }
 }
 
+const styles = StyleSheet.create({
+    container: {
+        flexDirection: 'row',
+        flex:0.95,
+        marginLeft:2,
+        paddingTop:2,
+        marginTop:2
+    }
+
+
+});
 
 export default Task;
