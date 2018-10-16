@@ -2,6 +2,8 @@ import React from 'react';
 
 import Menu from './components/Menu';
 
+
+
 export default class App extends React.Component {
     constructor() {
         super();
@@ -9,7 +11,7 @@ export default class App extends React.Component {
 
     render() {
         return (
-            <Menu />
+            <Menu style={{ flex: 1 }} />
         );
     }
 }

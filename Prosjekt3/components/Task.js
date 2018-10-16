@@ -9,11 +9,12 @@ class Task extends Component {
 
     render() {
         return (
-            <View>
+            <View style={{ flexDirection: 'row', flex:0.95, marginLeft:2, paddingTop:2, marginTop:2}}>
                 <CheckBox
                     isChecked={this.props.checked}
                     onClick={() => {this.props.handleCheckbox(this.props.id)}}
                 />
+                <Text> {this.props.name} </Text>
             </View>
         )
     }
