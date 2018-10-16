@@ -113,11 +113,20 @@ class Menu extends Component {
                 <View style={{ flex: 0.3 }}>
                     <View>
                         <Prompt
-                            title="Say something"
-                            inputPlaceholder="Enter Some Text"
+                            title="Add something :)"
+                            inputPlaceholder="Add text here"
+                            submitButtonText="Add"
+                            primaryColor='#0b0c0c'
+                            cancelButtonText="Cancel"
                             isVisible={this.state.visiblePrompt}
                             onChangeText={(newMenuName) => {
                                 this.setState({ newMenuName: newMenuName });
+                            }}
+                            onBackButtonPress={() => {
+                                this.setState({
+                                    newMenuName: '',
+                                    visiblePrompt: false,
+                                });
                             }}
                             onCancel={() => {
                                 this.setState({
