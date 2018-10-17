@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity, Button }
 import Store from 'react-native-store';
 import { MaterialIcons } from '@expo/vector-icons';
 import Prompt from 'react-native-prompt-crossplatform';
+import {BackHandler} from 'react-native';
 
 import Item from './Item'
 import Task from "./Task";
@@ -33,12 +34,11 @@ class Menu extends Component {
         this.openMenu = this.openMenu.bind(this);
         this.updateView = this.updateView.bind(this);
         this.updateProgressBar = this.updateProgressBar.bind(this);
-
+        this.handleBackPress = this.handleBackPress.bind(this)
         this.handleCheckTask = this.handleCheckTask.bind(this);
         this.openPrompt = this.openPrompt.bind(this);
 
         // debugging
-        this.resetStorage = this.resetStorage.bind(this);
         this.getStorage = this.getStorage.bind(this);
 
         /*
@@ -59,6 +59,7 @@ class Menu extends Component {
     }
 
     componentDidMount() {
+
         // this.resetStorage(); // Used when the app crashes because of the local storage
         store.get(STORE_MENUITEMS)
             .then((resp) => {
@@ -98,8 +99,12 @@ class Menu extends Component {
             .catch(error => {
             console.error(error.message);
         });
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
     }
 
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+    }
     render() {
         return (
             <View style={styles.container}>
@@ -218,7 +223,15 @@ class Menu extends Component {
         this.setState({ menuItems: menuItems });
     }
 
+    handleBackPress() {
+        if(this.state.currentMenu !== null){
+            this.setState({
+                currentMenu: null
+            });
+            return true
+        }
 
+    }
     updateView() {
         let state = this.state;
         return (state.currentMenu === null) ? state.menuItems

@@ -72,11 +72,11 @@ export class StepCounterComponent extends React.Component {
             <View>
                 <View style={styles.container}>
                     <Text>
-                        Steps taken today: {this.state.pastStepCount} / {this.props.dailyGoal}
+                        Steps taken today: {this.state.pastStepCount} / {this.props.limit}
                     </Text>
                     <ProgressBar
                         current={parseInt(this.state.pastStepCount + 2 - 2)}
-                        max={this.props.dailyGoal}
+                        max={this.props.limit}
                         height={10}
                         width={200}
                     />
