@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity, Button } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Alert, TextInput, TouchableOpacity, Button } from 'react-native';
 import Store from 'react-native-store';
 import { MaterialIcons } from '@expo/vector-icons';
 import Prompt from 'react-native-prompt-crossplatform';
@@ -224,13 +224,24 @@ class Menu extends Component {
     }
 
     handleBackPress() {
-        if(this.state.currentMenu !== null){
+        if(this.state.currentMenu !== null) {
             this.setState({
                 currentMenu: null
             });
-            return true
         }
-
+            else{
+                 Alert.alert('Exit app?',
+                    'Are you sure you want to exit?',
+                [
+                    {text: 'Yes', onPress: () => BackHandler.exitApp()},
+                    {
+                        text: 'No', onPress: () => {
+                    }
+                    },
+                ],
+            );
+        }
+        return true
     }
     updateView() {
         let state = this.state;
