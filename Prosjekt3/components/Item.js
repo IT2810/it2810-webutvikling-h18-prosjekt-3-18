@@ -1,5 +1,5 @@
 import React, { Component,  } from 'react';
-import { View, Text, Button, TouchableOpacity} from 'react-native';
+import { View, Text, Button, TouchableOpacity, StyleSheet} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 class Item extends Component {

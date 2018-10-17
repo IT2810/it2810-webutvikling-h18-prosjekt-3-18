@@ -1,10 +1,9 @@
 import 'react-native';
 import React from 'react';
-import { MonoText } from '../StyledText';
 import renderer from 'react-test-renderer';
+import App from '../../App';
 
 it('renders correctly', () => {
-  const tree = renderer.create(<MonoText>Snapshot test!</MonoText>).toJSON();
-
+  const tree = renderer.create(<App>Snapshot test!</App>).toJSON();
   expect(tree).toMatchSnapshot();
 });
