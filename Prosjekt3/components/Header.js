@@ -9,15 +9,22 @@ class Header extends Component {
 
     render() {
         return (
-            <View style={this.props.styleHeader}>
+            <View style={this.props.styleHeader} >
                 {this.props.menu !== null ?
-                    <TouchableOpacity title="Back" underlayColor="white" onPress={this.props.back}>
-                    <View style={this.props.styleButton}>
-                        <MaterialIcons name="arrow-back" size={30} color="black" />
+                    <TouchableOpacity
+                        title="Back"
+                        underlayColor="white"
+                        onPress={this.props.back}
+                        style={{flex: 1}}
+                    >
+                    <View>
+                        <MaterialIcons name="arrow-back" size={45} color="black" />
                     </View>
                     </TouchableOpacity>
-                    : null}
-                <Text> {this.props.title} </Text>
+                : null}
+                <View style={{alignContent: 'center', flex: 1}}>
+                    <Text style={{fontWeight: 'bold', fontSize: 20}}> {this.props.title} </Text>
+                </View>
             </View>
         );
     }

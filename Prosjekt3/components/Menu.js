@@ -35,26 +35,19 @@ class Menu extends Component {
         this.handleCheckTask = this.handleCheckTask.bind(this);
         this.openPrompt = this.openPrompt.bind(this);
 
-        // debugging
-        this.resetStorage = this.resetStorage.bind(this);
-        this.getStorage = this.getStorage.bind(this);
-
-
         this.getMenuName = this.getMenuName.bind(this);
-
-        /**
+        /*
          * currentMenu: Current menu displayed, null if in main menu.
          * newMenuName: Text from textInput.
          * menuItems: Menus that can be added with add button if in main menu. Saved to local storage
          * tasks: Task objects. Belongs to a parent (menuItem). Saved to local storage.
+         * visiblePrompt: Used when adding an item. Pop-ups the prompt to add.
          */
         this.state = {
             currentMenu: null,
             newMenuName: '',
             menuItems: [],
             tasks: [],
-            currentViewItems: [],
-            dailyGoal: 10000,
             visiblePrompt: false
         }
     }
@@ -80,15 +73,16 @@ class Menu extends Component {
                 resp !== null ?
                     this.setState(() => {
                         const tasksCopy = resp;
-
-
-
                         return {
                             tasks: tasksCopy
                         }
                     })
                     : null;
-            }).catch(error => {
+            })
+            .then(() => {
+                this.updateProgressBar()
+            })
+            .catch(error => {
             console.error(error.message);
         });
     }
@@ -100,7 +94,7 @@ class Menu extends Component {
                         title={this.getMenuName()}
                         back={this.back}
                         styleHeader={styles.header}
-                        styleButton={styles.button} />
+                />
                 <FlatList
                     extraData={this.state}
                     style={styles.list}
@@ -160,7 +154,6 @@ class Menu extends Component {
                                         visiblePrompt: false,
                                     });
                                 }
-
                             }}
                         />
                     </View>
@@ -169,20 +162,12 @@ class Menu extends Component {
                             <MaterialIcons name="add-circle-outline" size={40} color="black" />
                         </View>
                     </TouchableOpacity>
-                    {this.state.currentMenu !== null ? <TouchableOpacity title="Back" onPress={this.back} underlayColor="white">
-                        <View style={styles.button}>
-                            <MaterialIcons name="arrow-back" size={40} color="black" />
-                        </View>
-                    </TouchableOpacity> : null}
                 </View>
                 <View style={styles.subComponents}>
                     {this.state.currentMenu === null ?
                         <View style={styles.container}>
-                            <StepCounterComponent limit={this.state.dailyGoal} />
+                            <StepCounterComponent limit={10000} />
                         </View> : null}
-                    <Text>Dev Tools</Text>
-                    <Button style={styles.button} onPress={this.resetStorage} title="Clear storage [DEBUG]">Clear Storage</Button>
-                    <Button style={styles.button} onPress={this.getStorage} title="Get storage [DEBUG]">Get storage</Button>
                 </View>
             </View>
         );
@@ -214,7 +199,6 @@ class Menu extends Component {
         }
         this.setState({ menuItems: menuItems });
     }
-
 
     updateView() {
         let state = this.state;
@@ -331,39 +315,6 @@ class Menu extends Component {
         let index = menu.findIndex(x => x.key === id);
         return menu[index].title;
     }
-
-    /*
-     * Debugger tools
-     */
-
-    /**
-     * Clears the local storage.
-     */
-    resetStorage() {
-        store.delete(STORE_MENUITEMS);
-        store.delete(STORE_TASKS);
-        this.setState({
-            menuItems: [],
-            tasks: []
-        });
-        console.log("Cleared storage.")
-    }
-
-    /**
-     * Prints out elements from storage.
-     */
-    getStorage() {
-        store.get(STORE_MENUITEMS)
-            .then(resp => {
-                console.debug(":::::::::::===================:::::::::::\n" ,
-                    "(1) Printing menuItems", resp, "\n--::::--::::--::::--::::");
-            });
-
-        store.get(STORE_TASKS)
-            .then(resp => {
-                console.debug("(2) Printing tasks", resp)
-            });
-    }
 }
 
 const styles = StyleSheet.create({
@@ -377,6 +328,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         borderRadius: 100,
         alignSelf: 'center',
+        backgroundColor: '#'
     },
     item: {
         padding: 10,
@@ -388,7 +340,11 @@ const styles = StyleSheet.create({
         flex: 5,
     },
     header: {
-        height: 25
+        left: 0,
+        top: 0,
+        height: 50,
+        flexDirection: 'row',
+        alignContent: 'center',
     },
     subComponents: {
         flex: 0.3
