@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
-import {View, StyleSheet, FlatList, Button, TextInput, Text} from 'react-native';
+
+import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity, Button } from 'react-native';
+import Store from 'react-native-store';
+import { MaterialIcons } from '@expo/vector-icons';
+import Prompt from 'react-native-prompt-crossplatform';
 
 import Item from './Item'
 import Task from "./Task";
 
 import Header from './Header';
 import TodoList from "./TodoList";
-import {StepCounterComponent} from "./StepCounterComponent";
+import { StepCounterComponent } from "./StepCounterComponent";
 
 
 const STORE_TASKS = 'tasks';
@@ -31,6 +35,7 @@ class Menu extends Component {
         this.updateProgressBar = this.updateProgressBar.bind(this);
 
         this.handleCheckTask = this.handleCheckTask.bind(this);
+        this.openPrompt = this.openPrompt.bind(this);
 
         // debugging
         this.resetStorage = this.resetStorage.bind(this);
@@ -44,10 +49,13 @@ class Menu extends Component {
          */
         this.state = {
             currentMenu: null,
-            newMenuName: 'Homework',
+            newMenuName: '',
             menuItems: [],
-            tasks: []
-        };
+            tasks: [],
+            currentViewItems: [],
+            dailyGoal: 10000,
+            visiblePrompt: false
+        }
     }
 
     componentDidMount() {
@@ -95,7 +103,7 @@ class Menu extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Header title={this.state.currentMenu} />
+                <Header title={this.state.currentMenu} style={styles.header} />
                 <FlatList
                     extraData={this.state}
                     style={styles.list}
@@ -124,22 +132,61 @@ class Menu extends Component {
                         </Item>
                     }
                 />
-                <View style={{ flex: 1 }}>
-                    <TextInput
-                        style={{ height: 40, borderTopWidth: 2, marginTop: 20, }}
-                        onChangeText={(newMenuName) => this.setState({ newMenuName: newMenuName })}
-                        value={this.state.newMenuName}
-                    />
-                    <Button style={styles.button} onPress={this.onAdd} title="Add">Add</Button>
-                    {this.state.currentMenu !== null ? <Button style={styles.button} onPress={this.back} title="Back" /> : null}
+                <View style={{ flex: 0.3 }}>
+                    <View>
+                        <Prompt
+                            title="Add something :)"
+                            inputPlaceholder="Add text here"
+                            submitButtonText="Add"
+                            primaryColor='#0b0c0c'
+                            cancelButtonText="Cancel"
+                            isVisible={this.state.visiblePrompt}
+                            onChangeText={(newMenuName) => {
+                                this.setState({ newMenuName: newMenuName });
+                            }}
+                            onBackButtonPress={() => {
+                                this.setState({
+                                    newMenuName: '',
+                                    visiblePrompt: false,
+                                });
+                            }}
+                            onCancel={() => {
+                                this.setState({
+                                    newMenuName: '',
+                                    visiblePrompt: false,
+                                });
+                            }}
+                            onSubmit={() => {
+                                if(this.state.newMenuName!==''){
+                                    this.onAdd();
+                                    this.setState({
+                                        visiblePrompt: false,
+                                    });
+                                }
 
+                            }}
+                        />
+                    </View>
+                    <TouchableOpacity title="Add" onPress={this.openPrompt}>
+                        <View style={styles.button}>
+                            <MaterialIcons name="add-circle-outline" size={40} color="black" />
+                        </View>
+                    </TouchableOpacity>
+                    {this.state.currentMenu !== null ? <TouchableOpacity title="Back" onPress={this.back} underlayColor="white">
+                        <View style={styles.button}>
+                            <MaterialIcons name="arrow-back" size={40} color="black" />
+                        </View>
+                    </TouchableOpacity> : null}
+                </View>
+                <View style={{ flex: 0.3 }}>
+                    {this.state.currentMenu === null ?
+                        <View style={styles.container}>
+                            <StepCounterComponent limit={this.state.dailyGoal} />
+                        </View> : null}
                     <Text>Dev Tools</Text>
                     <Button style={styles.button} onPress={this.resetStorage} title="Clear storage [DEBUG]">Clear Storage</Button>
                     <Button style={styles.button} onPress={this.getStorage} title="Get storage [DEBUG]">Get storage</Button>
                 </View>
-                    {/*<View style={styles.container}>
-                        <StepCounterComponent limit={10000} />
-                    </View>*/}
             </View>
         );
     }
@@ -170,6 +217,7 @@ class Menu extends Component {
         }
         this.setState({ menuItems: menuItems });
     }
+
 
     updateView() {
         let state = this.state;
@@ -209,7 +257,12 @@ class Menu extends Component {
                 .then(console.log(task, "pushed to local storage"));
         }
     };
-
+    openPrompt = () => {
+        this.setState({
+            newMenuName: '',
+            visiblePrompt: true
+        });
+    }
     back = e => {
         this.setState({ currentMenu: null });
     };
@@ -248,7 +301,7 @@ class Menu extends Component {
     };
 
     openMenu = e => {
-        this.setState({ currentMenu: e });
+        this.setState({ currentMenu: e })
     };
 
     guid() {
@@ -309,14 +362,17 @@ const styles = StyleSheet.create({
     container: {
         paddingTop: 22,
         flex: 1,
+        backgroundColor: '#FFF999'
         // flex: 0.4,
         // justifyContent: 'center',
         // alignItems: 'center',
     },
     button: {
         alignItems: 'center',
-        backgroundColor: '#DDDDDD',
         padding: 10,
+        marginTop: 10,
+        borderRadius: 100,
+        alignSelf: 'center',
     },
     item: {
         padding: 10,
@@ -324,8 +380,10 @@ const styles = StyleSheet.create({
         height: 44,
     },
     list: {
-        height: 10,
-        flex: 13
+        height: 100,
+        flex: 5,
+    },
+    header: {
     }
 });
 
