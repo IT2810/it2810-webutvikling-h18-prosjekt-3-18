@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
         top: 0,
         height: 50,
         flexDirection: 'row',
-        alignContent: 'center',
+
     },
     subComponents: {
         flex: 0.3
