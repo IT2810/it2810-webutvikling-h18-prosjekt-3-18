@@ -26,7 +26,7 @@ REACT Native
 
 I løpet av oppstartsfasen av prosjektet lagde vi en plan for hvordan komponent og UI-designet skulle se ut og fungere. Først ble vi enig om funksjonene vi skulle ha på websiden, deretter lagde vi en mockup av utseendet til siden, og tilslutt baserte på dette designet planla vi hvilke komponenter vi skulle ha og funksjonene deres.
 
-BILDE
+![ScreenShot](mockup1.png)
 
 Ved bruk av react native og egenskapene til den har vi også oppnådd kravet om å ha plattform uavhengighet ved bruk av ios og android.
 
@@ -68,7 +68,7 @@ Vi har også gjort underveis testing/akseptansetesting for å finne ut om design
 
 Vi prøvde å oppnå så høy test coverage som mulig når vi designet testene våre, vi endte opp med en ganske høy coverage, men det var vanskelig å oppnå 100% på alle ettersom det var noen funksjoner som bare ville aktiveres under spesielle forhold.
 
-BILDE
+![ScreenShot](coverage.png)
 
 Her er noen av testene våre.
 
