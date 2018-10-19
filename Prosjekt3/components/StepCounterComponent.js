@@ -4,9 +4,7 @@ import { StyleSheet, View, Text } from 'react-native';
 import ProgressBar from "./ProgressBar";
 
 
-/**
- *
- */
+
 export class StepCounterComponent extends React.Component {
     constructor(props) {
         super(props);
