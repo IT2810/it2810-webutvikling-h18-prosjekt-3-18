@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, FlatList, Alert, TextInput, TouchableOpacity, Button } from 'react-native';
-import Store from 'react-native-store';
-import { MaterialIcons } from 'react-native-vector-icons';
+import store from 'react-native-simple-store';
+import { MaterialIcons } from '@expo/vector-icons';
 import Prompt from 'react-native-prompt-crossplatform';
 import { BackHandler } from 'react-native';
 

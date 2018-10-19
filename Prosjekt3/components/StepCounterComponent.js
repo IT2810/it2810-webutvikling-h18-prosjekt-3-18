@@ -21,31 +21,7 @@ export class StepCounterComponent extends React.Component {
 
     }
 
-    componentWillUnmount() {
-        this._unsubscribe();
-    }
-
     _subscribe = () => {
-        this._subscription = Pedometer.watchStepCount(result => {
-            this.setState({
-                currentStepCount: result.steps
-            });
-        });
-
-
-
-        Pedometer.isAvailableAsync().then(
-            result => {
-                this.setState({
-                    isPedometerAvailable: String(result)
-                });
-            },
-            error => {
-                this.setState({
-                    isPedometerAvailable: "Could not get isPedometerAvailable: " + error
-                });
-            }
-        );
         const end = new Date();
         const start = new Date();
         start.setHours(0, 0, 0, 0);
