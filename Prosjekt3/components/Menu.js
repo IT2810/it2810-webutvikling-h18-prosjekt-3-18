@@ -89,12 +89,14 @@ class Menu extends Component {
 
     render() {
         return (
+
             <View style={styles.container}>
                 <Header menu={this.state.currentMenu}
                         title={this.getMenuName()}
                         back={this.back}
                         styleHeader={styles.header}
                 />
+                {this.state.menuItems.length>=1 ?
                 <FlatList
                     extraData={this.state}
                     style={styles.list}
@@ -119,15 +121,16 @@ class Menu extends Component {
                                     id={item.key}
                                     checked={item.checked}
                                     handleCheckbox={this.handleCheckTask}
-                                />}
+                                />
+                            }
                         </Item>
                     }
-                />
+                />: <Text> Empty...</Text>}
                 <View style={{ flex: 0.3 }}>
                     <View>
                         <Prompt
                             title="Add Item"
-                            inputPlaceholder="Add text here"
+                            inputPlaceholder="Item..."
                             submitButtonText="Add"
                             primaryColor='#0b0c0c'
                             cancelButtonText="Cancel"
@@ -163,6 +166,8 @@ class Menu extends Component {
                         </View>
                     </TouchableOpacity>
                 </View>
+                {this.state.currentMenu === null ?
+                <View style={styles.breakline}/>: null}
                 <View style={styles.subComponents}>
                     {this.state.currentMenu === null ?
                         <View style={styles.container}>
@@ -321,6 +326,7 @@ const styles = StyleSheet.create({
     container: {
         paddingTop: 22,
         flex: 1,
+        height: '50%'
     },
     button: {
         alignItems: 'center',
@@ -356,6 +362,13 @@ const styles = StyleSheet.create({
         height: 40,
         borderTopWidth: 2,
         marginTop: 20
+    },
+    breakline: {
+        borderBottomColor: 'black',
+        borderBottomWidth: 1,
+        maxWidth: 200,
+        marginLeft: '25%',
+        marginRight: '25%'
     }
 
 });

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, Button, TouchableOpacity, StyleSheet} from 'react-native';
 import ProgressBar from "./ProgressBar";
+import { MaterialIcons } from '@expo/vector-icons';
 
 class TodoList extends Component {
     constructor(props) {
@@ -12,6 +13,9 @@ class TodoList extends Component {
     render() {
         return (
             <View style={styles.container}>
+                <TouchableOpacity title="Open" onPress={this.onPressOpen}>
+                <MaterialIcons name="playlist-add-check" size={25} color="black" />
+                </TouchableOpacity>
                 <TouchableOpacity title="Open" onPress={this.onPressOpen}>
                 <Text style={styles.text}> {this.props.name}</Text>
                 </TouchableOpacity>
