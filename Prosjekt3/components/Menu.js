@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, FlatList, Alert, TextInput, TouchableOpacity, Button } from 'react-native';
 import Store from 'react-native-store';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from 'react-native-vector-icons';
 import Prompt from 'react-native-prompt-crossplatform';
-import {BackHandler} from 'react-native';
+import { BackHandler } from 'react-native';
 
 import Item from './Item'
 import Task from "./Task";
@@ -64,8 +64,8 @@ class Menu extends Component {
                     })
                     : null;
             }).catch(error => {
-            console.error(error.message);
-        });
+                console.error(error.message);
+            });
 
         store.get(STORE_TASKS)
             .then((resp) => {
@@ -82,8 +82,8 @@ class Menu extends Component {
                 this.updateProgressBar()
             })
             .catch(error => {
-            console.error(error.message);
-        });
+                console.error(error.message);
+            });
         BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
     }
 
@@ -95,40 +95,40 @@ class Menu extends Component {
 
             <View style={styles.container}>
                 <Header menu={this.state.currentMenu}
-                        title={this.getMenuName()}
-                        back={this.back}
-                        styleHeader={styles.header}
+                    title={this.getMenuName()}
+                    back={this.back}
+                    styleHeader={styles.header}
                 />
-                {this.state.menuItems.length>=1 ?
-                <FlatList
-                    extraData={this.state}
-                    style={styles.list}
-                    data={this.updateView()}
-                    renderItem={({ item }) =>
-                        <Item
-                            key={item.key}
-                            id={item.key}
-                            onDelete={this.deleteItem}
-                        >
-                            {item.menu === true ?
-                                <TodoList
-                                    name={item.title}
-                                    id={item.key}
-                                    onOpen={this.openMenu}
-                                    complete={item.totalDoneTaskCount}
-                                    total={item.totalTaskCount}
-                                />
-                                :
-                                <Task
-                                    name={item.title}
-                                    id={item.key}
-                                    checked={item.checked}
-                                    handleCheckbox={this.handleCheckTask}
-                                />
-                            }
-                        </Item>
-                    }
-                />: <Text> Empty...</Text>}
+                {this.state.menuItems.length >= 1 ?
+                    <FlatList
+                        extraData={this.state}
+                        style={styles.list}
+                        data={this.updateView()}
+                        renderItem={({ item }) =>
+                            <Item
+                                key={item.key}
+                                id={item.key}
+                                onDelete={this.deleteItem}
+                            >
+                                {item.menu === true ?
+                                    <TodoList
+                                        name={item.title}
+                                        id={item.key}
+                                        onOpen={this.openMenu}
+                                        complete={item.totalDoneTaskCount}
+                                        total={item.totalTaskCount}
+                                    />
+                                    :
+                                    <Task
+                                        name={item.title}
+                                        id={item.key}
+                                        checked={item.checked}
+                                        handleCheckbox={this.handleCheckTask}
+                                    />
+                                }
+                            </Item>
+                        }
+                    /> : <Text> Empty...</Text>}
                 <View style={{ flex: 0.3 }}>
                     <View>
                         <Prompt
@@ -154,7 +154,7 @@ class Menu extends Component {
                                 });
                             }}
                             onSubmit={() => {
-                                if(this.state.newMenuName!==''){
+                                if (this.state.newMenuName !== '') {
                                     this.onAdd();
                                     this.setState({
                                         visiblePrompt: false,
@@ -170,7 +170,7 @@ class Menu extends Component {
                     </TouchableOpacity>
                 </View>
                 {this.state.currentMenu === null ?
-                <View style={styles.breakline}/>: null}
+                    <View style={styles.breakline} /> : null}
                 <View style={styles.subComponents}>
                     {this.state.currentMenu === null ?
                         <View style={styles.container}>
@@ -209,19 +209,19 @@ class Menu extends Component {
     }
 
     handleBackPress() {
-        if(this.state.currentMenu !== null) {
+        if (this.state.currentMenu !== null) {
             this.setState({
                 currentMenu: null
             });
         }
-            else{
-                 Alert.alert('Exit app?',
-                    'Are you sure you want to exit?',
+        else {
+            Alert.alert('Exit app?',
+                'Are you sure you want to exit?',
                 [
-                    {text: 'Yes', onPress: () => BackHandler.exitApp()},
+                    { text: 'Yes', onPress: () => BackHandler.exitApp() },
                     {
                         text: 'No', onPress: () => {
-                    }
+                        }
                     },
                 ],
             );
@@ -231,7 +231,7 @@ class Menu extends Component {
     updateView() {
         let state = this.state;
         return (state.currentMenu === null) ? state.menuItems
-            : state.tasks.filter(obj => { return obj.parentID === state.currentMenu});
+            : state.tasks.filter(obj => { return obj.parentID === state.currentMenu });
     }
 
     onAdd = e => {
