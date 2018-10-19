@@ -11,16 +11,21 @@ export class StepCounterComponent extends React.Component {
             isPedometerAvailable: "checking",
             pastStepCount: 0,
             currentStepCount: 0,
-            dailyGoal: this.props.limit
         };
 
     }
 
+    /*
+    Sets up the connection for when the component first mounts
+     */
     componentDidMount() {
         this._subscribe();
 
     }
-
+    /*
+    Sets a end and start date for calculating how many steps taken for the current day, starting form midnight
+    and stores this in the state.
+     */
     _subscribe = () => {
         const end = new Date();
         const start = new Date();
@@ -36,25 +41,19 @@ export class StepCounterComponent extends React.Component {
             }
         );
     };
-    _unsubscribe = () => {
-        this._subscription && this._subscription.remove();
-        this._subscription = null;
-    };
-
-
 
     render() {
         return (
             <View>
                 <View style={styles.container}>
                     <Text>
-                        Steps taken today: {this.state.pastStepCount} / {this.state.dailyGoal}
+                        Steps taken today: {this.state.pastStepCount} / {this.props.limit}
                     </Text>
                     <View style={styles.StepContainer}>
                         <MaterialIcons name="directions-walk" size={20} color="black" />
                         <ProgressBar
                             current={parseInt(this.state.pastStepCount + 2 - 2)}
-                            max={this.state.dailyGoal}
+                            max={this.props.limit}
                             height={10}
                             width={200}
                         />
