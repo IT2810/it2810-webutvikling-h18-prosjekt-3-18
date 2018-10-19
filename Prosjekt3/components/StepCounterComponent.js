@@ -4,6 +4,12 @@ import { StyleSheet, View, Text } from 'react-native';
 import ProgressBar from "./ProgressBar";
 import { MaterialIcons } from '@expo/vector-icons';
 
+
+/**
+ * StepCounter Component used in Menu.js Shows progress on
+ * a bar and takes care of the coordination with the app
+ * and the function on the phone that finds the number of steps.
+ */
 export class StepCounterComponent extends React.Component {
     constructor(props) {
         super(props);
