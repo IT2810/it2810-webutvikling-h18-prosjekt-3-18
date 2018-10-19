@@ -1,63 +1,47 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders correctly 1`] = `
-<View>
-  <View>
-    <View
-      animated={true}
-      animationConfig={
-        Object {
-          "bounciness": 0,
-        }
+<View
+  style={
+    Object {
+      "alignItems": "stretch",
+      "flex": 0.95,
+      "flexDirection": "row",
+      "marginLeft": 2,
+      "marginTop": 2,
+      "paddingTop": 2,
+    }
+  }
+>
+  <View
+    accessible={true}
+    isTVSelectable={true}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "opacity": 1,
       }
-      animationType="spring"
-      border-radius="12px"
-      indeterminate={false}
-      onLayout={[Function]}
-      progress={NaN}
+    }
+  >
+    <Text
+      accessible={true}
+      allowFontScaling={true}
+      ellipsizeMode="tail"
       style={
-        Array [
-          Object {
-            "backgroundColor": "#F22",
-            "borderColor": "#000",
-            "borderRadius": 4,
-            "borderWidth": 1,
-            "overflow": "hidden",
-            "width": 100,
-          },
-          undefined,
-        ]
-      }
-      useNativeDriver={false}
-    >
-      <View
-        style={
-          Object {
-            "backgroundColor": "#0F0",
-            "height": 10,
-            "transform": Array [
-              Object {
-                "translateX": 0,
-              },
-              Object {
-                "translateX": NaN,
-              },
-              Object {
-                "scaleX": NaN,
-              },
-            ],
-          }
+        Object {
+          "width": 100,
         }
-      />
-    </View>
+      }
+    >
+       
+    </Text>
   </View>
   <View
-    accessibilityComponentType="button"
-    accessibilityTraits={
-      Array [
-        "button",
-      ]
-    }
     accessible={true}
     isTVSelectable={true}
     onResponderGrant={[Function]}
@@ -74,28 +58,62 @@ exports[`renders correctly 1`] = `
   >
     <View
       style={
-        Array [
-          Object {},
-        ]
+        Object {
+          "alignItems": "center",
+          "marginLeft": 40,
+          "paddingTop": 5,
+        }
       }
     >
-      <Text
-        accessible={true}
-        allowFontScaling={true}
-        ellipsizeMode="tail"
-        style={
-          Array [
+      <View>
+        <View
+          animated={true}
+          animationConfig={
             Object {
-              "color": "#007AFF",
-              "fontSize": 18,
-              "padding": 8,
-              "textAlign": "center",
-            },
-          ]
-        }
-      >
-        Open
-      </Text>
+              "bounciness": 0,
+            }
+          }
+          animationType="spring"
+          border-radius="12px"
+          indeterminate={false}
+          onLayout={[Function]}
+          progress={NaN}
+          style={
+            Array [
+              Object {
+                "backgroundColor": "#F22",
+                "borderColor": "#000",
+                "borderRadius": 4,
+                "borderWidth": 1,
+                "overflow": "hidden",
+                "width": 100,
+              },
+              undefined,
+            ]
+          }
+          useNativeDriver={false}
+        >
+          <View
+            style={
+              Object {
+                "backgroundColor": "#0F0",
+                "height": 10,
+                "transform": Array [
+                  Object {
+                    "translateX": 0,
+                  },
+                  Object {
+                    "translateX": NaN,
+                  },
+                  Object {
+                    "scaleX": NaN,
+                  },
+                ],
+              }
+            }
+          />
+        </View>
+      </View>
     </View>
   </View>
 </View>
