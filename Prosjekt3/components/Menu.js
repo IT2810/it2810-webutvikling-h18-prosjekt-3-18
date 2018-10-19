@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-
-import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity, Button } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Alert, TextInput, TouchableOpacity, Button } from 'react-native';
+import Store from 'react-native-store';
 import { MaterialIcons } from '@expo/vector-icons';
 import Prompt from 'react-native-prompt-crossplatform';
-import store from 'react-native-simple-store';
+import {BackHandler} from 'react-native';
 
 import Item from './Item'
 import Task from "./Task";
@@ -31,11 +31,11 @@ class Menu extends Component {
         this.openMenu = this.openMenu.bind(this);
         this.updateView = this.updateView.bind(this);
         this.updateProgressBar = this.updateProgressBar.bind(this);
-
+        this.handleBackPress = this.handleBackPress.bind(this)
         this.handleCheckTask = this.handleCheckTask.bind(this);
         this.openPrompt = this.openPrompt.bind(this);
-
         this.getMenuName = this.getMenuName.bind(this);
+
         /*
          * currentMenu: Current menu displayed, null if in main menu.
          * newMenuName: Text from textInput.
@@ -53,7 +53,6 @@ class Menu extends Component {
     }
 
     componentDidMount() {
-       // this.resetStorage(); // Use this when the app crashes. Just uncomment, run and then comment again.
         store.get(STORE_MENUITEMS)
             .then((resp) => {
                 resp !== null ?
@@ -85,8 +84,12 @@ class Menu extends Component {
             .catch(error => {
             console.error(error.message);
         });
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
     }
 
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+    }
     render() {
         return (
 
@@ -205,6 +208,26 @@ class Menu extends Component {
         this.setState({ menuItems: menuItems });
     }
 
+    handleBackPress() {
+        if(this.state.currentMenu !== null) {
+            this.setState({
+                currentMenu: null
+            });
+        }
+            else{
+                 Alert.alert('Exit app?',
+                    'Are you sure you want to exit?',
+                [
+                    {text: 'Yes', onPress: () => BackHandler.exitApp()},
+                    {
+                        text: 'No', onPress: () => {
+                    }
+                    },
+                ],
+            );
+        }
+        return true
+    }
     updateView() {
         let state = this.state;
         return (state.currentMenu === null) ? state.menuItems
