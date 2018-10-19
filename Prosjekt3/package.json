@@ -24,7 +24,6 @@
     "react-native-progress": "^3.5.0",
     "react-native-prompt": "^1.0.0",
     "react-native-prompt-crossplatform": "^1.6.1",
-    "react-native-store": "^0.4.1",
     "react-navigation": "^2.18.0",
     "react-test-renderer": "latest",
     "ws": "^6.0.0",
