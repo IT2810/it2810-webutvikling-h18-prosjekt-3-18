@@ -193,7 +193,7 @@ class Menu extends Component {
         );
     }
 
-    /*
+    /**
     Iterares over and updates the individual progressbars on the TodDos, eflects how many task have been done within the To-Do
      */
     updateProgressBar() {
@@ -223,7 +223,7 @@ class Menu extends Component {
         this.setState({ menuItems: menuItems });
     }
 
-    /*
+    /**
     Handles the Androids BackButton presses so that it can be use for Navigation witnin the Todos and a safety feature to
     ask if the user wants to exit the app
      */
@@ -247,7 +247,7 @@ class Menu extends Component {
         }
         return true
     }
-    /*
+    /**
     The method of updating the render so that the relevant information is showed, if in the mainscreen or within a specific To-do
      */
     updateView() {
@@ -255,10 +255,10 @@ class Menu extends Component {
         return (state.currentMenu === null) ? state.menuItems
             : state.tasks.filter(obj => { return obj.parentID === state.currentMenu });
     }
-/*
-The function used to add elements and store them in the asyncStorage, depending on where it is called it
-will at either a To-Do from the main menu or a new task when within a To-Do.
- */
+    /**
+    The function used to add elements and store them in the asyncStorage, depending on where it is called it
+    will at either a To-Do from the main menu or a new task when within a To-Do.
+    */
     onAdd = e => {
         let id = this.guid();
         let titleName = this.state.newMenuName;
@@ -292,7 +292,7 @@ will at either a To-Do from the main menu or a new task when within a To-Do.
         }
     };
 
-    /*
+    /**
     Called when trying to add, will open the promtBox
      */
     openPrompt = () => {
@@ -302,14 +302,14 @@ will at either a To-Do from the main menu or a new task when within a To-Do.
         });
     };
 
-    /*
+    /**
     Returns the user back to mainscreen
      */
     back = e => {
         this.setState({ currentMenu: null });
     };
 
-    /*
+    /**
     Deletes the selected To-do or Task
      */
     deleteItem = e => {
@@ -349,7 +349,7 @@ will at either a To-Do from the main menu or a new task when within a To-Do.
         this.setState({ currentMenu: e })
     };
 
-    /*
+    /**
     Function that handles the assignment of unique ids to todos, tasks and Items
      */
     guid() {
@@ -361,7 +361,7 @@ will at either a To-Do from the main menu or a new task when within a To-Do.
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
     }
 
-    /*
+    /**
     Keeps track of checked tasks in case of need to delete
      */
     handleCheckTask(taskID) {
@@ -375,7 +375,7 @@ will at either a To-Do from the main menu or a new task when within a To-Do.
         this.updateProgressBar();
     }
 
-    /*
+    /**
     Handles the extraction of menuName
      */
     getMenuName() {
