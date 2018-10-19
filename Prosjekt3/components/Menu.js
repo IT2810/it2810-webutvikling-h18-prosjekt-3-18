@@ -92,13 +92,15 @@ class Menu extends Component {
     }
     render() {
         return (
-
             <View style={styles.container}>
                 <Header menu={this.state.currentMenu}
                     title={this.getMenuName()}
                     back={this.back}
                     styleHeader={styles.header}
                 />
+                {/*
+                Handles the showing of a Flatlist of Todos and shows the text Empty... when no Todos are found/ everything has been deleted
+                 */}
                 {this.state.menuItems.length >= 1 ?
                     <FlatList
                         extraData={this.state}
@@ -131,6 +133,10 @@ class Menu extends Component {
                     /> : <Text> Empty...</Text>}
                 <View style={{ flex: 0.3 }}>
                     <View>
+                        {/*
+                        This promptBox is shown when the + sign is pressed and you are ready to add an item into the Tasks or Todolist
+                        Supports Android BackButton. The promptBox handles the onAdd function when adding
+                        */}
                         <Prompt
                             title="Add Item"
                             inputPlaceholder="Item..."
@@ -169,6 +175,10 @@ class Menu extends Component {
                         </View>
                     </TouchableOpacity>
                 </View>
+                {/*
+                Shows the breakline and the StepCounter Depending on if you are at the mainscreen or not, when
+                within Todos it will not show.
+                */}
                 {this.state.currentMenu === null ?
                     <View style={styles.breakline} /> : null}
                 <View style={styles.subComponents}>
@@ -181,6 +191,9 @@ class Menu extends Component {
         );
     }
 
+    /*
+    Iterares over and updates the individual progressbars on the TodDos, eflects how many task have been done within the To-Do
+     */
     updateProgressBar() {
         let totalTasks;
         let completedTasks;
@@ -208,6 +221,10 @@ class Menu extends Component {
         this.setState({ menuItems: menuItems });
     }
 
+    /*
+    Handles the Androids BackButton presses so that it can be use for Navigation witnin the Todos and a safety feature to
+    ask if the user wants to exit the app
+     */
     handleBackPress() {
         if (this.state.currentMenu !== null) {
             this.setState({
@@ -228,12 +245,18 @@ class Menu extends Component {
         }
         return true
     }
+    /*
+    The method of updating the render so that the relevant information is showed, if in the mainscreen or within a specific To-do
+     */
     updateView() {
         let state = this.state;
         return (state.currentMenu === null) ? state.menuItems
             : state.tasks.filter(obj => { return obj.parentID === state.currentMenu });
     }
-
+/*
+The function used to add elements and store them in the asyncStorage, depending on where it is called it
+will at either a To-Do from the main menu or a new task when within a To-Do.
+ */
     onAdd = e => {
         let id = this.guid();
         let titleName = this.state.newMenuName;
@@ -266,6 +289,10 @@ class Menu extends Component {
                 .then(console.log(task, "pushed to local storage"));
         }
     };
+
+    /*
+    Called when trying to add, will open the promtBox
+     */
     openPrompt = () => {
         this.setState({
             newMenuName: '',
@@ -273,10 +300,16 @@ class Menu extends Component {
         });
     };
 
+    /*
+    Returns the user back to mainscreen
+     */
     back = e => {
         this.setState({ currentMenu: null });
     };
 
+    /*
+    Deletes the selected To-do or Task
+     */
     deleteItem = e => {
         let removeIndex;
         if (this.state.currentMenu === null) {
@@ -314,6 +347,9 @@ class Menu extends Component {
         this.setState({ currentMenu: e })
     };
 
+    /*
+    Function that handles the assignment of unique ids to todos, tasks and Items
+     */
     guid() {
         function s4() {
             return Math.floor((1 + Math.random()) * 0x10000)
@@ -323,6 +359,9 @@ class Menu extends Component {
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
     }
 
+    /*
+    Keeps track of checked tasks in case of need to delete
+     */
     handleCheckTask(taskID) {
         let taskList = this.state.tasks;
         let checkedIndex = taskList.findIndex(x => x.key === taskID);
@@ -334,6 +373,9 @@ class Menu extends Component {
         this.updateProgressBar();
     }
 
+    /*
+    Handles the extraction of menuName
+     */
     getMenuName() {
         let id = this.state.currentMenu;
         if (id === null) {
