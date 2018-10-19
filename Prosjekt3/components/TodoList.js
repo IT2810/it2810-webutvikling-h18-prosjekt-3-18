@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text, Button, TouchableOpacity} from 'react-native';
+import { View, Text, Button, TouchableOpacity, StyleSheet} from 'react-native';
 import ProgressBar from "./ProgressBar";
+import { MaterialIcons } from '@expo/vector-icons';
 
 class TodoList extends Component {
     constructor(props) {
@@ -11,12 +12,15 @@ class TodoList extends Component {
 
     render() {
         return (
-            <View style={{ flexDirection: 'row', flex:0.95, marginLeft:2, paddingTop:2, marginTop:2,  alignItems: 'stretch'}}>
+            <View style={styles.container}>
                 <TouchableOpacity title="Open" onPress={this.onPressOpen}>
-                <Text style={{width:100}}> {this.props.name}</Text>
+                <MaterialIcons name="playlist-add-check" size={25} color="black" />
                 </TouchableOpacity>
                 <TouchableOpacity title="Open" onPress={this.onPressOpen}>
-                    <View style={{alignItems: 'center', marginLeft: 40, paddingTop: 5}}>
+                <Text style={styles.text}> {this.props.name}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity title="Open" onPress={this.onPressOpen}>
+                    <View style={styles.bar}>
                     <ProgressBar
                         current={this.props.complete}
                         max={this.props.total}
@@ -33,5 +37,25 @@ class TodoList extends Component {
         this.props.onOpen(this.props.id);
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flexDirection: 'row',
+        flex:0.95,
+        marginLeft:2,
+        paddingTop:2,
+        marginTop:2,
+        alignItems: 'stretch'
+    },
+    text: {
+        width: 100
+    },
+    bar: {
+        alignItems: 'center',
+        marginLeft: 40,
+        paddingTop: 5
+    }
+
+});
 
 export default TodoList;

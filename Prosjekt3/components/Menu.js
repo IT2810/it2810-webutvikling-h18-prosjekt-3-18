@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import { View, Text, StyleSheet, FlatList, Alert, TextInput, TouchableOpacity, Button } from 'react-native';
 import Store from 'react-native-store';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -13,7 +12,6 @@ import Header from './Header';
 import TodoList from "./TodoList";
 import { StepCounterComponent } from "./StepCounterComponent";
 
-
 const STORE_TASKS = 'tasks';
 const STORE_MENUITEMS = 'menuItems';
 
@@ -21,7 +19,6 @@ const STORE_MENUITEMS = 'menuItems';
  * Library used for AsyncStorage:
  * https://github.com/jasonmerino/react-native-simple-store
  */
-import store from 'react-native-simple-store';
 
 class Menu extends Component {
     constructor() {
@@ -37,39 +34,30 @@ class Menu extends Component {
         this.handleBackPress = this.handleBackPress.bind(this)
         this.handleCheckTask = this.handleCheckTask.bind(this);
         this.openPrompt = this.openPrompt.bind(this);
-
-        // debugging
-        this.getStorage = this.getStorage.bind(this);
+        this.getMenuName = this.getMenuName.bind(this);
 
         /*
          * currentMenu: Current menu displayed, null if in main menu.
          * newMenuName: Text from textInput.
          * menuItems: Menus that can be added with add button if in main menu. Saved to local storage
          * tasks: Task objects. Belongs to a parent (menuItem). Saved to local storage.
+         * visiblePrompt: Used when adding an item. Pop-ups the prompt to add.
          */
         this.state = {
             currentMenu: null,
             newMenuName: '',
             menuItems: [],
             tasks: [],
-            currentViewItems: [],
-            dailyGoal: 10000,
             visiblePrompt: false
         }
     }
 
     componentDidMount() {
-
-        // this.resetStorage(); // Used when the app crashes because of the local storage
         store.get(STORE_MENUITEMS)
             .then((resp) => {
                 resp !== null ?
                     this.setState(() => {
                         const menuItemsCopy = resp;
-                        // for (let i in resp) {
-                        //     menuItemsCopy.push(resp[i]);
-                        // }
-
                         return {
                             menuItems: menuItemsCopy
                         };
@@ -84,9 +72,6 @@ class Menu extends Component {
                 resp !== null ?
                     this.setState(() => {
                         const tasksCopy = resp;
-                        // for (let i in resp) {
-                        //     tasksCopy.push(resp[i]);
-                        // }
                         return {
                             tasks: tasksCopy
                         }
@@ -107,8 +92,14 @@ class Menu extends Component {
     }
     render() {
         return (
+
             <View style={styles.container}>
-                <Header title={this.state.currentMenu} style={styles.header} />
+                <Header menu={this.state.currentMenu}
+                        title={this.getMenuName()}
+                        back={this.back}
+                        styleHeader={styles.header}
+                />
+                {this.state.menuItems.length>=1 ?
                 <FlatList
                     extraData={this.state}
                     style={styles.list}
@@ -133,15 +124,16 @@ class Menu extends Component {
                                     id={item.key}
                                     checked={item.checked}
                                     handleCheckbox={this.handleCheckTask}
-                                />}
+                                />
+                            }
                         </Item>
                     }
-                />
+                />: <Text> Empty...</Text>}
                 <View style={{ flex: 0.3 }}>
                     <View>
                         <Prompt
-                            title="Add something :)"
-                            inputPlaceholder="Add text here"
+                            title="Add Item"
+                            inputPlaceholder="Item..."
                             submitButtonText="Add"
                             primaryColor='#0b0c0c'
                             cancelButtonText="Cancel"
@@ -168,7 +160,6 @@ class Menu extends Component {
                                         visiblePrompt: false,
                                     });
                                 }
-
                             }}
                         />
                     </View>
@@ -177,20 +168,14 @@ class Menu extends Component {
                             <MaterialIcons name="add-circle-outline" size={40} color="black" />
                         </View>
                     </TouchableOpacity>
-                    {this.state.currentMenu !== null ? <TouchableOpacity title="Back" onPress={this.back} underlayColor="white">
-                        <View style={styles.button}>
-                            <MaterialIcons name="arrow-back" size={40} color="black" />
-                        </View>
-                    </TouchableOpacity> : null}
                 </View>
-                <View style={{ flex: 0.3 }}>
+                {this.state.currentMenu === null ?
+                <View style={styles.breakline}/>: null}
+                <View style={styles.subComponents}>
                     {this.state.currentMenu === null ?
                         <View style={styles.container}>
-                            <StepCounterComponent limit={this.state.dailyGoal} />
+                            <StepCounterComponent limit={10000} />
                         </View> : null}
-                    <Text>Dev Tools</Text>
-                    <Button style={styles.button} onPress={this.resetStorage} title="Clear storage [DEBUG]">Clear Storage</Button>
-                    <Button style={styles.button} onPress={this.getStorage} title="Get storage [DEBUG]">Get storage</Button>
                 </View>
             </View>
         );
@@ -286,7 +271,8 @@ class Menu extends Component {
             newMenuName: '',
             visiblePrompt: true
         });
-    }
+    };
+
     back = e => {
         this.setState({ currentMenu: null });
     };
@@ -348,37 +334,14 @@ class Menu extends Component {
         this.updateProgressBar();
     }
 
-    /*
-     * Debugger tools
-     */
-
-    /**
-     * Clears the local storage.
-     */
-    resetStorage() {
-        store.delete(STORE_MENUITEMS);
-        store.delete(STORE_TASKS);
-        this.setState({
-            menuItems: [],
-            tasks: []
-        });
-        console.log("Cleared storage.")
-    }
-
-    /**
-     * Prints out elements from storage.
-     */
-    getStorage() {
-        store.get(STORE_MENUITEMS)
-            .then(resp => {
-                console.debug(":::::::::::===================:::::::::::\n" ,
-                    "(1) Printing menuItems", resp, "\n--::::--::::--::::--::::");
-            });
-
-        store.get(STORE_TASKS)
-            .then(resp => {
-                console.debug("(2) Printing tasks", resp)
-            });
+    getMenuName() {
+        let id = this.state.currentMenu;
+        if (id === null) {
+            return 'Main Menu';
+        }
+        let menu = this.state.menuItems;
+        let index = menu.findIndex(x => x.key === id);
+        return menu[index].title;
     }
 }
 
@@ -386,10 +349,7 @@ const styles = StyleSheet.create({
     container: {
         paddingTop: 22,
         flex: 1,
-        backgroundColor: '#FFF999'
-        // flex: 0.4,
-        // justifyContent: 'center',
-        // alignItems: 'center',
+        height: '50%'
     },
     button: {
         alignItems: 'center',
@@ -407,8 +367,33 @@ const styles = StyleSheet.create({
         height: 100,
         flex: 5,
     },
+
     header: {
+        left: 0,
+        top: 0,
+        height: 50,
+        backgroundColor: '#EEEEEE',
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignItems: "center"
+    },
+
+    subComponents: {
+        flex: 0.3
+    },
+    input: {
+        height: 40,
+        borderTopWidth: 2,
+        marginTop: 20
+    },
+    breakline: {
+        borderBottomColor: 'black',
+        borderBottomWidth: 1,
+        maxWidth: 200,
+        marginLeft: '25%',
+        marginRight: '25%'
     }
+
 });
 
 export default Menu;
