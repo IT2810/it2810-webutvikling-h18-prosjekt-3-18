@@ -8,6 +8,12 @@ class Item extends Component {
         this.onPressDelete = this.onPressDelete.bind(this);
     }
 
+    /* 
+    Dette er en item i listen som vises. I en item kan det enten være en meny eller en oppgave.
+    Item gir felles metoder for både menyene og oppgavene, som feks delete knappen eller stylingen som begge må ha.
+    Videre spesialisering av items inn i meny eller oppgave skjer i underkomponentene TodoList.js eller Task.js.
+    */
+
     render() {
         return (
             <View style={styles.items}>

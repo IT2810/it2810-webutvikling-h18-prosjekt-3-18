@@ -42,6 +42,14 @@ export class StepCounterComponent extends React.Component {
         );
     };
 
+    /* 
+    StepCounter bruker GoogleAPI til å hente antall skritt du har gått hittil idag. 
+    Den henter denne variabelen ut og bruker komponenten ProgressBar til å vise
+    hvor nærme du er målet ditt om å gå 10000 skritt i løpet av dagen. 
+
+    Det er brukt noen materialicons for å vise på en visuell måte hva komponenten gjør.
+    */
+
     render() {
         return (
             <View>
