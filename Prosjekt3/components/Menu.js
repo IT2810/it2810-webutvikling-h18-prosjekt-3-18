@@ -87,9 +87,6 @@ class Menu extends Component {
         BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
     }
 
-    componentWillUnmount() {
-        BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
-    }
     render() {
         return (
             <View style={styles.container}>
