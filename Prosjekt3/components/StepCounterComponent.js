@@ -2,11 +2,8 @@ import { Pedometer } from "expo";
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import ProgressBar from "./ProgressBar";
+import { MaterialIcons } from '@expo/vector-icons';
 
-
-/**
- *
- */
 export class StepCounterComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -14,6 +11,7 @@ export class StepCounterComponent extends React.Component {
             isPedometerAvailable: "checking",
             pastStepCount: 0,
             currentStepCount: 0,
+            dailyGoal: this.props.limit
         };
 
     }
@@ -67,19 +65,25 @@ export class StepCounterComponent extends React.Component {
         this._subscription = null;
     };
 
+
+
     render() {
         return (
             <View>
                 <View style={styles.container}>
                     <Text>
-                        Steps taken today: {this.state.pastStepCount} / {this.props.limit}
+                        Steps taken today: {this.state.pastStepCount} / {this.state.dailyGoal}
                     </Text>
-                    <ProgressBar
-                        current={parseInt(this.state.pastStepCount + 2 - 2)}
-                        max={this.props.limit}
-                        height={10}
-                        width={200}
-                    />
+                    <View style={styles.StepContainer}>
+                        <MaterialIcons name="directions-walk" size={20} color="black" />
+                        <ProgressBar
+                            current={parseInt(this.state.pastStepCount + 2 - 2)}
+                            max={this.state.dailyGoal}
+                            height={10}
+                            width={200}
+                        />
+                        <MaterialIcons name="flag" size={20} color="black" />
+                    </View>
                 </View>
             </View>
         );
@@ -90,6 +94,10 @@ const styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    StepContainer: {
+        flexDirection: 'row',
+        paddingTop: 20
     }
 });
 

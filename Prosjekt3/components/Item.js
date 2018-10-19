@@ -1,5 +1,5 @@
 import React, { Component,  } from 'react';
-import { View, Text, Button, TouchableOpacity} from 'react-native';
+import { View, Text, Button, TouchableOpacity, StyleSheet} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 class Item extends Component {
@@ -10,7 +10,7 @@ class Item extends Component {
 
     render() {
         return (
-            <View style={{ borderTopWidth: 1, flexDirection: 'row', borderStyle: 'dashed'}}>
+            <View style={styles.items}>
                 {this.props.children}
                 <TouchableOpacity title="Delete" onPress={this.onPressDelete}>
                     <MaterialIcons name="delete" size={40} color="black" />
@@ -24,5 +24,13 @@ class Item extends Component {
     }
 
 }
+const styles = StyleSheet.create({
+        items: {
+            borderTopWidth: 1,
+            flexDirection: 'row',
+            borderStyle: 'dashed'
+        }
 
+
+});
 export default Item;
