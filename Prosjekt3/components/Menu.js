@@ -12,14 +12,19 @@ import Header from './Header';
 import TodoList from "./TodoList";
 import { StepCounterComponent } from "./StepCounterComponent";
 
-const STORE_TASKS = 'tasks';
-const STORE_MENUITEMS = 'menuItems';
-
-/**
+/*
  * Library used for AsyncStorage:
  * https://github.com/jasonmerino/react-native-simple-store
  */
+const STORE_TASKS = 'tasks';
+const STORE_MENUITEMS = 'menuItems';
 
+
+/**
+ * This is the main Menu that holds all the child components.
+ * This takes care of local storage, showing of correct items
+ * at different times and of showing the step counter.
+ */
 class Menu extends Component {
     constructor() {
         super();
