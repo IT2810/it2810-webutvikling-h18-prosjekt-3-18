@@ -1,0 +1,120 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "stretch",
+      "flex": 0.95,
+      "flexDirection": "row",
+      "marginLeft": 2,
+      "marginTop": 2,
+      "paddingTop": 2,
+    }
+  }
+>
+  <View
+    accessible={true}
+    isTVSelectable={true}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "opacity": 1,
+      }
+    }
+  >
+    <Text
+      accessible={true}
+      allowFontScaling={true}
+      ellipsizeMode="tail"
+      style={
+        Object {
+          "width": 100,
+        }
+      }
+    >
+       
+    </Text>
+  </View>
+  <View
+    accessible={true}
+    isTVSelectable={true}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "opacity": 1,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "marginLeft": 40,
+          "paddingTop": 5,
+        }
+      }
+    >
+      <View>
+        <View
+          animated={true}
+          animationConfig={
+            Object {
+              "bounciness": 0,
+            }
+          }
+          animationType="spring"
+          border-radius="12px"
+          indeterminate={false}
+          onLayout={[Function]}
+          progress={NaN}
+          style={
+            Array [
+              Object {
+                "backgroundColor": "#F22",
+                "borderColor": "#000",
+                "borderRadius": 4,
+                "borderWidth": 1,
+                "overflow": "hidden",
+                "width": 100,
+              },
+              undefined,
+            ]
+          }
+          useNativeDriver={false}
+        >
+          <View
+            style={
+              Object {
+                "backgroundColor": "#0F0",
+                "height": 10,
+                "transform": Array [
+                  Object {
+                    "translateX": 0,
+                  },
+                  Object {
+                    "translateX": NaN,
+                  },
+                  Object {
+                    "scaleX": NaN,
+                  },
+                ],
+              }
+            }
+          />
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;
