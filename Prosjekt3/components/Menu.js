@@ -328,7 +328,6 @@ const styles = StyleSheet.create({
         marginTop: 10,
         borderRadius: 100,
         alignSelf: 'center',
-        backgroundColor: '#'
     },
     item: {
         padding: 10,
@@ -339,13 +338,17 @@ const styles = StyleSheet.create({
         height: 100,
         flex: 5,
     },
+
     header: {
         left: 0,
         top: 0,
         height: 50,
-        flexDirection: 'row',
-
+        backgroundColor: '#EEEEEE',
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignItems: "center"
     },
+
     subComponents: {
         flex: 0.3
     },

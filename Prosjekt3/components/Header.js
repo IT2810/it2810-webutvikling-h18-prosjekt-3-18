@@ -15,15 +15,14 @@ class Header extends Component {
                         title="Back"
                         underlayColor="white"
                         onPress={this.props.back}
-                        style={{flex: 1}}
                     >
                     <View>
                         <MaterialIcons name="arrow-back" size={45} color="black" />
                     </View>
                     </TouchableOpacity>
                 : null}
-                <View style={{alignContent: 'center', flex: 1}}>
-                    <Text style={{fontWeight: 'bold', fontSize: 20}}> {this.props.title} </Text>
+                <View style={{flexGrow: 1, left: -20}}>
+                    <Text style={{fontWeight: 'bold', fontSize: 20, width: "100%", textAlign: "center"}}>{this.props.title} </Text>
                 </View>
             </View>
         );
